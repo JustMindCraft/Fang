@@ -1,7 +1,7 @@
 {
-  "name": "webtorrentadmin",
-  "version": "1.0.0",
-  "description": "this is A webtorrent video admin system ",
+  "name": "fanjs",
+  "version": "0.01",
+  "description": "a nodejs framework make mind easy basic on hapi",
   "main": "index.js",
   "scripts": {
     "test": "mocha",
