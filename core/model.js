@@ -1,6 +1,7 @@
 import config from '../config/index';
 import MongoInstance from './MongoInstance';
 import PgsqlInstance from './PgsqlInstance';
+import LevelInstance from './LevelInstance';
 var Inflector = require('inflected');
 
 
@@ -43,6 +44,9 @@ var Inflector = require('inflected');
         if(config.db.driver === 'pgsql'){
             this.db  = new PgsqlInstance();
             this.db.connect(config);
+        }
+        if(config.db.driver === 'level'){
+            this.db = new LevelInstance(this.name);
         }
         
        
