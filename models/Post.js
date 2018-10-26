@@ -2,9 +2,9 @@
 import AppModel from '../core/model';
 
 
-import Comment from './model';
+import Tag from './Tag.js';
 
-import User from './model';
+import User from './User.js';
 
 
 export default class Post extends AppModel {
@@ -16,7 +16,7 @@ export default class Post extends AppModel {
         
             body: String,
         
-            hasMany: Comment,
+            hasMany: Tag,
         
             belongsTo: User,
         

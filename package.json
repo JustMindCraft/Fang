@@ -1,6 +1,6 @@
 {
   "name": "fanjs",
-  "version": "0.01",
+  "version": "0.0.1",
   "description": "a nodejs framework make mind easy basic on hapi",
   "main": "index.js",
   "scripts": {

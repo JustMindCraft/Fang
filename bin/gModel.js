@@ -1,7 +1,7 @@
 var exec = require('child_process').exec;
 
 function demoInputShow(){
-    return "npm run gModel Post title:String body:String hasMany:Comment belongsTo:User"
+    return "npm run gModel New title:String body:String hasMany:Comment belongsTo:User"
 }
 console.log('正确例子是：', demoInputShow());
 console.log('本脚本用于自动生成model, 尚未完成, 敬请期待');
@@ -59,7 +59,7 @@ for (let j = 0; j < modelReference.length; j++) {
     const model = modelReference[j];
     modelReferenceStr += 
 `
-import ${model} from './model';
+import ${model} from './${model}.js';
 `;
     
     
@@ -110,6 +110,11 @@ fs.exists(modelPath, function(exists){
     }
     });
 });
+
+//基于model生成api文件
+
+
+//基于model生成基本的页面管理文件
 
 
 

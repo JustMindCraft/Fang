@@ -13,6 +13,7 @@ const mongoClient = mongo.MongoClient;
          Object.keys(modelFeilds).forEach(key => {
              this[key] = modelFeilds[key];
          })
+         this.toSaveFields =  modelFeilds;
         
      }
     validFields(feilds){
@@ -57,7 +58,7 @@ const mongoClient = mongo.MongoClient;
         console.log("即将存储");
         
     }
-    static find(query={}, sort={createdAt: -1}){
+    static find(query={}, sort={createdAt: -1}, page=0, pagesize=10){
         console.log('此处查找很多');
         return [1,2,3,4];
         
