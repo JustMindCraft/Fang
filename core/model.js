@@ -1,8 +1,8 @@
-import mongo from 'mongodb';
 import config from '../config/index';
+import MongoInstance from './MongoInstance';
+import PgsqlInstance from './PgsqlInstance';
 var Inflector = require('inflected');
 
-const mongoClient = mongo.MongoClient;
 
  class AppModel {
      constructor(feilds){
@@ -14,6 +14,8 @@ const mongoClient = mongo.MongoClient;
              this[key] = modelFeilds[key];
          })
          this.toSaveFields =  modelFeilds;
+
+         
         
      }
     validFields(feilds){
@@ -35,24 +37,18 @@ const mongoClient = mongo.MongoClient;
     static initConnect(){
         let self = this;
         if(config.db.driver === 'mongodb'){
-            mongoClient.connect(config.mongodb.url, function(err, db) {
-                if (err) throw err;
-                console.log("数据库已创建!");
-                if(self.collection){
-                    console.log(self.collection);
-                    
-                }else{
-                    console.log('此模型没有数据表');
-                    
-                }
-                db.close();
-              });
+            this.db = new MongoInstance();
+            this.db.connect(config);
+        }
+        if(config.db.driver === 'pgsql'){
+            this.db  = new PgsqlInstance();
+            this.db.connect(config);
         }
         
        
     }
     static one(query={}){
-        
+        return this.db.findOne(query);
     }
     save(){
         console.log("即将存储");

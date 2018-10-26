@@ -46,6 +46,7 @@ for (let index = 2; index < process.argv.length; index++) {
     
 }
 
+console.log(feildsString);
 
 if(!process.argv[3]){
         console.error('请给模型一些字段');
