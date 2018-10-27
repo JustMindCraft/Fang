@@ -8,6 +8,17 @@ import server from '../core/server';
 
 import  '../controllers';
 
+import models from '../models';
+
+import AppModel from '../core/model';
+
+//注册所有的models
+
+models.forEach(model => {
+    AppModel.modelName = model.name;
+})
+
+
 
 const init = async () => {
 

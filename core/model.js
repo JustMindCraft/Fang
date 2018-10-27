@@ -14,7 +14,8 @@ var Inflector = require('inflected');
          Object.keys(modelFeilds).forEach(key => {
              this[key] = modelFeilds[key];
          })
-         this.toSaveFields =  modelFeilds;
+
+        
 
          
         
@@ -46,7 +47,7 @@ var Inflector = require('inflected');
             this.db.connect(config);
         }
         if(config.db.driver === 'level'){
-            this.db = new LevelInstance(this.name);
+            this.db = new LevelInstance();
         }
         
        
@@ -59,6 +60,8 @@ var Inflector = require('inflected');
         
     }
     static find(query={}, sort={createdAt: -1}, page=0, pagesize=10){
+        console.log("这个的模型名称是", this.name);
+        
         console.log('此处查找很多');
         return [1,2,3,4];
         

@@ -1,24 +1,40 @@
-var levelup = require('levelup')
-var leveldown = require('leveldown')
+import uuidv4 from 'uuid/v4';
 
+import  levelup from 'levelup';
+import  leveldown from 'leveldown';
 
 
 export default class LevelInstance{
-    constructor(modelName){
-        // 1) Create our store
-        var db = levelup(leveldown('./leveldata/'))
+    constructor(){
+      
+    }
 
-        // 2) Put a key & value
-        db.put('name', 'levelup', function (err) {
-        if (err) return console.log('Ooops!', err) // some kind of I/O error
+    async checkModelNameOrCreateOne(modelName){
+        let model = await db.get(modelName )
+    }
 
-        // 3) Fetch by key
-        db.get('name', function (err, value) {
-            if (err) return console.log('Ooops!', err) // likely the key was not found
+    async checkFieldExistOrCreateSome(modelName, modelFeild){
+        //检查字段是否已经存在, 若是不存在就创建
+        let feilds = await db.get(modelName)
+    }
 
-            // Ta da!
-            console.log('name=' + value)
-        })
-        })
+    async insert(modelName, modelFeild){
+        let uuid = uuidv4();
+        let db = levelup(leveldown('./leveldata/'+modelName))
+        try {
+            //把字段都取出来，
+            return await db.put(uuid, modelFeild);
+            
+        } catch (error) {
+            console.error(error);
+            process.exit(1);
+            
+        }
+    }
+
+    async fineOne(query={}){
+        let db = levelup(leveldown('./leveldata/'+modelName));
+        db.get("")
+        
     }
 }
