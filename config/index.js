@@ -12,7 +12,7 @@ export default {
 		port: 8000
 	},
 	db: {
-		driver: "level",
+		driver: "loki",
 	},
 	mongodb: {
 		url: "mongodb://localhost:27017/webtorrentadmin"
