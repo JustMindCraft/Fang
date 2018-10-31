@@ -6,15 +6,23 @@
 
 /* config */
 /* 设置 */
+const Path = require('path');
+
 export default {
 	server: {
 		host: 'localhost',
-		port: 8000
+		port: 8000,
+		routes: {
+			files: {
+				relativeTo: Path.join(__dirname, '../public/assets')
+			}
+		}
 	},
 	db: {
 		driver: "loki",
 	},
 	mongodb: {
 		url: "mongodb://localhost:27017/webtorrentadmin"
-	}
+	},
+	
 };
