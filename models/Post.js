@@ -9,10 +9,10 @@ import User from './User.js';
 
 export default class Post extends AppModel {
     constructor(feilds){
-        super(feilds);
+        super(feilds, Post);
         this.validFields({
             
-            title: String,
+            title: [String,{required: true, minLength: 10}],
         
             body: String,
         

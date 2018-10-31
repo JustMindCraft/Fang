@@ -1,7 +1,8 @@
 import config from '../config/index';
 import MongoInstance from './MongoInstance';
 import PgsqlInstance from './PgsqlInstance';
-import LevelInstance from './LevelInstance';
+import LokiInstance from './LokiInstance';
+import UUID from 'uuid/v4'
 var Inflector = require('inflected');
 
 const db = null
@@ -17,52 +18,79 @@ if(config.db.driver === 'level'){
     db = new LevelInstance(this.name);
 }
 
+
+let db = null
+if(config.db.driver === 'loki'){
+    db = new LokiInstance();
+
+}
+
  class AppModel {
-     constructor(feilds){
+     constructor(feilds, child){
+         
+         this.innerProperties = {};
+         this.innerProperties.modelName = child.name;
+         this.innerProperties.db = null;
+         this.innerProperties.feilds = {};
+
          let modelFeilds = feilds;
          if(!modelFeilds.createdAt){
              modelFeilds.createdAt = new Date();
+             modelFeilds.id = UUID();
          }
          Object.keys(modelFeilds).forEach(key => {
              this[key] = modelFeilds[key];
          })
-         this.toSaveFields =  modelFeilds;
-
-         
-        
      }
-    validFields(feilds){
-         this.feilds = feilds;
-        if(this.feilds){
-            console.log("是否有", this.feilds);
+
+     async dealHasMany(){
+        let innerFeilds = this.innerProperties.feilds
             
-           if(this.feilds.hasMany){
-               let items = this.feilds.hasMany.find();
+           if(innerFeilds.hasMany){
+               let query = {};
+               query[this.innerProperties.modelName.toString().toLowerCase()+"Id"] = this.id;
+
                
-               let key  = Inflector.pluralize(this.feilds.hasMany.name.toLowerCase());
+               let items = await innerFeilds.hasMany.find(query);
+               
+               let key  = Inflector.pluralize(innerFeilds.hasMany.name.toLowerCase());
                //转化小写以及单复数
-               console.log(key);
                
                this[key] = items;
            }
-       }
      }
-    static initConnect(){
-        let self = this;
         
+     async validFields(feilds){
+         this.innerProperties.feilds = feilds;
+         await this.dealHasMany();
+         
+     }
+    
+    static  one(query={}){
+        return db.findOne(query, this.name);
         
-       
     }
-    static one(query={}){
-        return this.db.findOne(query);
-    }
-    save(){
-        console.log("即将存储");
+    async save(){
+        await this.dealHasMany();
+        let paramsToInsert = {};
+        Object.getOwnPropertyNames(this).forEach(key => {
+            if(key !== 'innerProperties'){
+                
+                paramsToInsert[key] = this[key];
+            }
+        });
+        
+        try {
+            return   await db.insert(paramsToInsert, this.innerProperties.modelName);
+            
+        } catch (error) {
+            console.log("插入新数据错误", error);
+            
+        }
         
     }
     static find(query={}, sort={createdAt: -1}, page=0, pagesize=10){
-        console.log('此处查找很多');
-        return [1,2,3,4];
+        return db.find(query);
         
     }
 }

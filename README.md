@@ -23,7 +23,7 @@ master节点将重点研究 leveldb 和 webtorrent分布式问题，其期待是
 3. mongodb-vue-shop　是基于mongodb, vue作为前端的电商系统示例
 4. mongodb-react-shop　是基于mongodb, react作为前端的电商系统示例
 5. mongodb-react-native-shop　是基于mongodb, react-native作为前端的电商系统示例
-6. master节点将重点研究 leveldb 和 webtorrent分布式问题，其期待是本软件能够在浏览器和各个其他平台作为节点运行
+6. master节点将重点研究 lokijs 和 webtorrent分布式问题，其期待是本软件能够在浏览器和各个其他平台作为节点运行
 7. pgsql 稳定版本将会发布在pgsql 上
 8. mysql 稳定版本将会发布在mysql 上
 9. levelDB 稳定版本将会发布在leveldb 上

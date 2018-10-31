@@ -1,0 +1,53 @@
+<% include ./layouts/frontend_header %>
+<style>
+    .login-form-center{
+        text-align: center;
+    }
+    .login-container{
+        text-align: center;
+    }
+</style>
+
+<div class="container login-container">
+        <div class="row">
+            <div class="col s12 flow-text login-form-center">登录您的正觉账号</div>
+            <form action="/login" method="POST" class="col s12 flow-text">
+                <div class="row">
+                        <div>
+                                <div class="input-field col s12"><%= msg %></div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                  <input id="email" type="email" name="email" class="validate">
+                                  <label for="email">电子邮箱</label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                  <input id="password" type="password" name="password" class="validate">
+                                  <label for="password">密码</label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="col s6"><Button type="submit" class="waves-effect waves-light btn-large red darken-1">登录</Button></div>
+                                <div class="col s6"><Button type="button" class="waves-effect waves-light btn-large blue lighten-1">注册</Button></div>
+                        </div>
+                       
+                </div>
+               
+            </form>
+               
+               
+        </div>
+
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        M.toast({html: 'I am a toast'});
+    });
+
+</script>
+
+
+
+<% include ./layouts/frontend_footer %>
