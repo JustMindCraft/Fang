@@ -4,6 +4,18 @@ import PgsqlInstance from './PgsqlInstance';
 import LevelInstance from './LevelInstance';
 var Inflector = require('inflected');
 
+const db = null
+if(config.db.driver === 'mongodb'){
+    db = new MongoInstance();
+    db.connect(config);
+}
+if(config.db.driver === 'pgsql'){
+    db  = new PgsqlInstance();
+    db.connect(config);
+}
+if(config.db.driver === 'level'){
+    db = new LevelInstance(this.name);
+}
 
  class AppModel {
      constructor(feilds){
@@ -37,17 +49,7 @@ var Inflector = require('inflected');
      }
     static initConnect(){
         let self = this;
-        if(config.db.driver === 'mongodb'){
-            this.db = new MongoInstance();
-            this.db.connect(config);
-        }
-        if(config.db.driver === 'pgsql'){
-            this.db  = new PgsqlInstance();
-            this.db.connect(config);
-        }
-        if(config.db.driver === 'level'){
-            this.db = new LevelInstance(this.name);
-        }
+        
         
        
     }
@@ -64,6 +66,5 @@ var Inflector = require('inflected');
         
     }
 }
-AppModel.initConnect();
 
 export default AppModel;
