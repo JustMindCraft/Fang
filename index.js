@@ -6,6 +6,3 @@
 
 require('babel-register');
 require('./bootstrap/server');
-
-require('./controllers')
-require('./views')

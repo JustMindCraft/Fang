@@ -1,4 +1,3 @@
-import Post from '../models/Post';
 
 export default 
 [
@@ -6,14 +5,15 @@ export default
     
         method: 'GET',
     
-        path: '/reg',
+        path: '/reg', 
+        
+        config: {auth: false},
     
         handler: async (request, h) => {
         
             try {
-                console.log(request.query);
                 
-                return h.view('login', {
+                return h.view('reg', {
                         title: '正觉工场 | 创建正觉账号 ',
                         msg: request.query.msg
                     });
@@ -28,6 +28,8 @@ export default
         method: "POST",
 
         path: '/reg',
+        
+        config: {auth: false},
 
         handler: async (request, h) => {
             console.log(request.auth);

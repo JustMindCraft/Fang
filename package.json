@@ -7,7 +7,8 @@
     "test": "mocha",
     "start": "NODE_ENV=production nodemon index.js ",
     "dev": "NODE_ENV=development nodemon index.js ",
-    "gModel": "node ./bin/gModel.js"
+    "gModel": "node ./bin/gModel.js",
+    "seed-admin": "node ./bin/SeedAdminUser.js"
   },
   "keywords": [
     "webtorrent",
@@ -24,6 +25,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
+    "bcrypt": "^3.0.2",
     "better-sqlite3": "^5.0.1",
     "bl": "^2.1.2",
     "bluebird": "^3.5.2",
@@ -44,6 +46,7 @@
     "lodash": "^4.17.11",
     "lokijs": "^1.5.5",
     "mongodb": "^3.1.8",
+    "mysql2": "^1.6.1",
     "nodemon": "^1.18.5",
     "require-directory": "^2.1.1",
     "sendevent": "^1.0.5",

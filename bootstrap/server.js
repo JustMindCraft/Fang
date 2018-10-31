@@ -7,13 +7,15 @@
 import server from '../core/server';
 import Boom from 'boom'
 import  '../controllers';
-
+import registerControllers from '../core/registerControllers';
+import controllers from '../controllers'
 const JWT    = require('jsonwebtoken');
 const secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
 const people = { // our "users database"
     1: {
       id: 1,
-      name: 'Jen Jones'
+      name: 'Jen Jones',
+      scope: ["user"]
     }
 };
 const token = JWT.sign(people[1], secret); // synchronous
@@ -22,14 +24,14 @@ console.log(token);
 // bring your own validation function
 const validate = async function (decoded, request, h) {
     
-    console.log(people[decoded.id]);
+    console.log(people[decoded.id].scope);
     
     // do your checks to see if the person is valid
     if (!people[decoded.id]) {
-      return { credentials: null, isValid: false};
+      return { credentials: null, isValid: false,  scope: 'nobody'};
     }
     else {
-      return { credentials: {good: 'good'}, isValid: true };
+      return { credentials: {scope: people[decoded.id].scope}, isValid: true };
     }
 };
 
@@ -55,7 +57,10 @@ const init = async () => {
       } // pick a strong algorithm
     });
   
-    server.auth.default('jwt');
+    server.auth.default({
+        strategy: 'jwt',
+        scope: 'admin'
+      });
 
     server.views({
         engines: { ejs: Ejs },
@@ -64,7 +69,7 @@ const init = async () => {
     });
     server.route({
         method: 'GET',
-        path: '/imgs/{filename}',
+        path: '/imgs/{filename}', config: {  auth: false },
         handler: {
             file: function (request) {
                 
@@ -72,21 +77,10 @@ const init = async () => {
             }
         }
     });
-    server.route(
-        {
-            method: 'GET', path: '/restricted', config: { auth: 'jwt' },
-            handler: function(request, h) {
-                console.log(request.auth);
-                
-              const response = h.response({text: 'You used a Token!'});
-              response.header("Authorization", request.headers.authorization);
-              return response;
-            }
-          }
-    )
+   
     server.route({
         method: 'GET',
-        path: '/js/{filename}',
+        path: '/js/{filename}', config: {  auth: false },
         handler: {
             file: function (request) {
                 
@@ -96,7 +90,7 @@ const init = async () => {
     });
     server.route({
         method: 'GET',
-        path: '/css/{filename}',
+        path: '/css/{filename}',config: {  auth: false },
         handler: {
             file: function (request) {
                 
@@ -106,7 +100,7 @@ const init = async () => {
     });
     server.route({  
         method: [ 'GET', 'POST' ],
-        path: '/{any*}',
+        path: '/{any*}',config: {  auth: false },
         handler: (request, h) => {
           const accept = request.headers.accept
       
@@ -119,6 +113,26 @@ const init = async () => {
           })
         }
       })
+
+      registerControllers(server, controllers);
+      server.route(
+        {
+            method: 'GET', path: '/restricted',
+            handler: function(request, h) {
+                console.log(request.auth);
+                
+              const response = h.response({text: 'You used a Token!'});
+              response.header("Authorization", request.headers.authorization);
+              return response;
+            },
+            options: {
+                auth: {
+                    strategy: 'jwt',
+                    scope: ['+admin', "!nobody"]
+                }
+            }
+          }
+    )
     console.log(`Server running at: ${server.info.uri}`);
 };
 

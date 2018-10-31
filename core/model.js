@@ -5,7 +5,7 @@ import LokiInstance from './LokiInstance';
 import UUID from 'uuid/v4'
 var Inflector = require('inflected');
 
-const db = null
+let db = null
 if(config.db.driver === 'mongodb'){
     db = new MongoInstance();
     db.connect(config);
@@ -19,7 +19,6 @@ if(config.db.driver === 'level'){
 }
 
 
-let db = null
 if(config.db.driver === 'loki'){
     db = new LokiInstance();
 

@@ -1,7 +1,6 @@
 
 import home from './home';
 import login from './login';
-import registerControllers from '../core/registerControllers';
+import reg from './reg';
 
-
-registerControllers([home, login])
+export default [home, reg, login];
