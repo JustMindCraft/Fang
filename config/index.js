@@ -19,7 +19,7 @@ export default {
 		}
 	},
 	db: {
-		driver: "pg",
+		driver: "sqlite",
 	},
 	mongodb: {
 		url: "mongodb://localhost:27017/webtorrentadmin"

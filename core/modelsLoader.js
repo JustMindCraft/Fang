@@ -8,14 +8,12 @@ export default async function modelsLoader(models){
 
         model.collection = collection;
 
-        if(config.db.driver === 'gunjs'){
-            // get the client
-            console.log('使用gunjs');
-            model.findOne = function(query){
-
-            }
-            
+        if(config.db.driver === 'gunjs'){ 
          
+        }
+
+        if(config.db.driver === 'sqlite'){
+            
         }
 
         if (config.db.driver === 'pg') {

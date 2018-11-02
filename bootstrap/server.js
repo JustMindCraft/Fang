@@ -105,16 +105,18 @@ const init = async () => {
             }
         }
     });
+   
     server.route({
         method: 'GET',
-        path: '/gun/{filename}', config: {  auth: false },
+        path: '/gun/{param*}', config: {  auth: false },
         handler: {
-            file: function (request) {
-                
-                return 'gun/'+request.params.filename;
-            }
+          directory: {
+            path: "gun/",
+            redirectToSlash: true,
+            index: true
+          }
         }
-    });
+      });
 
     server.route({
         method: 'GET',
@@ -178,3 +180,4 @@ process.on('unhandledRejection', (err) => {
 });
 
 init();
+

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://localhost:8000/gun/gun.js"></script>
+    <script src="http://localhost:8000/gun/sea.js"></script>
+</head>
+<body>
+
+    <script>
+         var gun = Gun('http://localhost:8000/gun');
+         var sea = Gun.SEA;
+            sea.pair(function(pair){
+                 console.log(pair);
+                 var alias = "alice"
+                var pass = "secret";
+                var salt = 1; // random
+               sea.work(alias, pass, function(proof){
+                        sea.encrypt(pair, proof, function(auth){
+                            console.log(auth); // data saved in a cryptographically linked user graph
+                            gun.get("first_auth").put({auth}, function(ack){
+                                console.log(ack);
+                                
+
+                            });
+
+                        });
+                }); // don't do this! (pass, salt) instead!
+           
+
+            }); // generate a new key pair
+          
+            
+    </script>
+    
+</body>
+</html>
