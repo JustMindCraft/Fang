@@ -8,19 +8,19 @@ import User from './User.js';
 
 
 export default class Post extends AppModel {
-    constructor(feilds){
-        super(feilds, Post);
-        this.validFields({
-            
-            title: [String,{required: true, minLength: 10}],
+    
+    static setFeilds(){
+        return {
+            title: "VARCHAR(20)",
         
-            body: String,
+            body: "TEXT",
         
             hasMany: Tag,
+
         
-            belongsTo: User,
-        
-        })
+            belongsTo: [User, Tag],
+        }
     }
+    
 }
 

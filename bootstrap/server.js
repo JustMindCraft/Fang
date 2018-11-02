@@ -8,7 +8,15 @@ import server from '../core/server';
 import Boom from 'boom'
 import  '../controllers';
 import registerControllers from '../core/registerControllers';
-import controllers from '../controllers'
+import controllers from '../controllers';
+import loadModels from '../models';
+const Inert = require('inert');
+const Gun   = require('gun');
+
+
+
+
+
 const JWT    = require('jsonwebtoken');
 const secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
 const people = { // our "users database"
@@ -28,20 +36,29 @@ const validate = async function (decoded, request, h) {
     
     // do your checks to see if the person is valid
     if (!people[decoded.id]) {
-      return { credentials: null, isValid: false,  scope: 'nobody'};
+      return { credentials: {msg: "公钥"}, isValid: false,  scope: 'nobody'};
     }
     else {
-      return { credentials: {scope: people[decoded.id].scope}, isValid: true };
+      return { credentials: {scope: people[decoded.id].scope, msg: "公钥"}, isValid: true };
     }
 };
+
+//
 
 const init = async () => {
     const Vision = require('vision');
     const Ejs = require('ejs');
+
+    const db = new Gun({
+        web: server.listener,
+        file: 'datastore/gunblock'
+    })
+    await loadModels();
+
     await server.register(Vision);
     
     //static
-    await server.register(require('inert'));
+    await server.register(Inert);
 
     await server.register(require('hapi-auth-jwt2'));
 
@@ -90,6 +107,17 @@ const init = async () => {
     });
     server.route({
         method: 'GET',
+        path: '/gun/{filename}', config: {  auth: false },
+        handler: {
+            file: function (request) {
+                
+                return 'gun/'+request.params.filename;
+            }
+        }
+    });
+
+    server.route({
+        method: 'GET',
         path: '/css/{filename}',config: {  auth: false },
         handler: {
             file: function (request) {
@@ -103,7 +131,8 @@ const init = async () => {
         path: '/{any*}',config: {  auth: false },
         handler: (request, h) => {
           const accept = request.headers.accept
-      
+            console.log(request.params);
+            
           if (accept && accept.match(/json/)) {
             return Boom.notFound('Fuckity fuck, this resource isn’t available.')
           }
@@ -133,6 +162,13 @@ const init = async () => {
             }
           }
     )
+    server.events.on('request', (request, h) => {
+
+        // console.log(request.path, request.auth);
+        
+        
+        
+    });
     console.log(`Server running at: ${server.info.uri}`);
 };
 

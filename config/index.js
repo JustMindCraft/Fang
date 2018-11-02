@@ -19,10 +19,23 @@ export default {
 		}
 	},
 	db: {
-		driver: "loki",
+		driver: "pg",
 	},
 	mongodb: {
 		url: "mongodb://localhost:27017/webtorrentadmin"
 	},
+	mysql: {
+		host: '139.198.6.232',
+		user: 'justmind_dev',
+		database: 'justmind_dev',
+		password: "justmind_dev"
+	},
+	pg: {
+		host: '127.0.0.1',
+		port: 5432,
+		user: 'dbuser',
+		database: "exampledb",
+		password: 'password',
+	}
 	
 };
