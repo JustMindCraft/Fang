@@ -38,7 +38,7 @@
                                   <span id="password-helper" class="helper-text" data-error="" data-success=""></span>
 
                                 </div>
-                                <input id="password_true" name="password" type="hidden">
+                                <input id="password_true" name="password" value="" type="hidden">
 
                         </div>
                         
@@ -68,8 +68,9 @@
 
         }
 
+
         $("#reg_form").submit((e)=>{
-            e.preventDefault();
+
             var email = $(e.target).find('#email').val();
             var fake_password = $(e.target).find("#password").val()
             var password_repeat = $(e.target).find("#password-repeat").val();
@@ -79,6 +80,8 @@
                 $(e.target).find("#password").attr("class", "validate invalid");
                 return false;
             }
+            $("#password_true").val(fake_password);
+
             
             if(!email){
                 $(e.target).find("#email-helper").attr("data-error", "邮箱不得为空");
@@ -109,27 +112,27 @@
                 return false;
             }
             
-            var gun = Gun('http://localhost:8000/gun');
-            var sea = Gun.SEA;
+            // var gun = Gun('http://localhost:8000/gun');
+            // var sea = Gun.SEA;
             
             
             
-            sea.pair(function(pair){
-                var pass =  fake_password;
-                var salt = Math.random(); // random
-                    sea.work(pass, salt, function(proof){
-                    sea.encrypt(pair, proof, function(auth){
-                        console.log(auth);
+            // sea.pair(function(pair){
+            //     var pass =  fake_password;
+            //     var salt = Math.random(); // random
+            //         sea.work(pass, salt, function(proof){
+            //         sea.encrypt(pair, proof, function(auth){
+            //             console.log(auth);
                         
                         
-                    });
-                }); 
+            //         });
+            //     }); 
                
-            }) // generate a new key pair
+            // }) // generate a new key pair
           
             
 
-            return false;
+            return true;
         })
     });
 

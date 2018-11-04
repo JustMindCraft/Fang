@@ -10,6 +10,7 @@ import  '../controllers';
 import registerControllers from '../core/registerControllers';
 import controllers from '../controllers';
 import loadModels from '../models';
+import config from '../config/index';
 const Inert = require('inert');
 const Gun   = require('gun');
 
@@ -53,7 +54,13 @@ const init = async () => {
         web: server.listener,
         file: 'datastore/gunblock'
     })
-    await loadModels();
+    if(config.db.driver !== "mongo"){
+        await loadModels();
+    }else{
+        // getting-started.js
+        var mongoose = require('mongoose');
+        mongoose.connect(config.mongodb.url);
+    }
 
     await server.register(Vision);
     

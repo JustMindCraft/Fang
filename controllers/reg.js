@@ -1,4 +1,7 @@
-import User from '../models/User'
+import User, { UserValidSchema } from '../MongoModels/User';
+
+import Joi from 'joi';
+
 export default 
 [
     {
@@ -32,7 +35,36 @@ export default
         config: {auth: false},
 
         handler: async (request, h) => {
-            console.log(request.auth);
+
+            let userParams = request.payload;
+            let password = request.payload.password;
+
+            console.log(userParams);
+            
+
+            
+            
+            const result = Joi.validate(request.payload, UserValidSchema);
+
+            let user  = new User(userParams);
+            
+            console.log(user);
+
+            try {
+                await user.save();
+                
+            } catch (error) {
+                console.log(error.errmsg);
+                
+            }
+
+            
+            if(result.error){
+                console.log(result.error.details);
+
+            }
+
+            
 
            return h.redirect('/reg?msg=trying');
             

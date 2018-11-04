@@ -19,7 +19,7 @@ export default {
 		}
 	},
 	db: {
-		driver: "gunjs",
+		driver: "mongo",
 	},
 	mongodb: {
 		url: "mongodb://localhost:27017/webtorrentadmin"
