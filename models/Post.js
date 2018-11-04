@@ -19,9 +19,9 @@ export default class Post extends AppModel {
         }
     }
 
-    static setFeildReferences(){
+    static setUniqueFeild(){
         return {
-            title: 'unique'
+            title: 'unique',
         }
     }
 
