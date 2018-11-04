@@ -6,19 +6,31 @@ import Tag from './Tag.js';
 
 import User from './User.js';
 
+import Joi from 'joi';
 
 export default class Post extends AppModel {
     
     static setFeilds(){
         return {
-            title: "VARCHAR(20)",
+            title: Joi.string().max(50).required(),
         
-            body: "TEXT",
+            body: Joi.string().min(20).required(),
         
-            hasMany: Tag,
+        }
+    }
 
+    static setFeildReferences(){
+        return {
+            title: 'unique'
+        }
+    }
+
+    static setRelations(){
+        return {
+            hasMany: Tag,
         
             belongsTo: [User, Tag],
+
         }
     }
     

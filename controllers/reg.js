@@ -1,4 +1,4 @@
-
+import User from '../models/User'
 export default 
 [
     {
@@ -35,6 +35,29 @@ export default
             console.log(request.auth);
 
            return h.redirect('/reg?msg=trying');
+            
+        }
+    },
+    {
+        method: "POST",
+
+        path: '/reg_valid',
+        
+        config: {auth: false},
+
+        handler: async (request, h) => {
+            
+            let Joi = require('joi');
+            let valid = User.setFeilds();
+            const result = Joi.validate(request.payload, valid);
+            
+            if(result.error){
+                 return result.error.details;
+
+            }else{
+                return 249967
+
+            }
             
         }
     }

@@ -1,5 +1,7 @@
 import config from '../config'
 import createPgTables from './createPgTables';
+import createGunRoots from './createGunRoots';
+import GunInstance from './GunInstance';
 const  Inflector = require('inflected');
 
 export default async function modelsLoader(models){
@@ -9,11 +11,11 @@ export default async function modelsLoader(models){
         model.collection = collection;
 
         if(config.db.driver === 'gunjs'){ 
-         
+            await createGunRoots(model);
         }
 
         if(config.db.driver === 'sqlite'){
-            
+
         }
 
         if (config.db.driver === 'pg') {
@@ -26,24 +28,13 @@ export default async function modelsLoader(models){
             console.log("findOne");
             
         }
-
-        model.create = async (params={}) => {
-            //插入数据表
-
-        }
-
-        model.find　= async (query={},sort={}, page={}, pagesize={},  fields=[]) => {
-
-        }
-
-        model.doSql = async (sql='') => {
-
-        }
-
-        
         model.prototype.save = async function(){
             
-            console.log('save2', this.title);
+            if(config.db.driver==="gunjs"){
+                console.log(this);
+                
+                return await GunInstance.put(model, this);
+            }
             
         }
 
@@ -51,6 +42,28 @@ export default async function modelsLoader(models){
             console.log("delete", this.title);
             
         }
+
+        model.create = async (params={}) => {
+            
+            //插入数据表
+            let instance = new model(params);
+
+            // instance.save();
+            
+            if(config.db.driver==="gunjs"){
+                return await GunInstance.put(model, instance);
+            }
+
+        }
+
+        model.find　= async (query={},sort={}, page=1, pagesize=10,  fields=[]) => {
+
+        }
+
+        model.doSql = async (sql='') => {
+
+        }
+
         
         
         

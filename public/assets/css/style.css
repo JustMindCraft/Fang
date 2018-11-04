@@ -37,7 +37,7 @@ p {
 .main-content{
   position: relative;
   top: 66px;
-  min-height: 568px;
+  min-height: 800px;
 }
 
 .parallax-container {

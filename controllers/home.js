@@ -24,11 +24,14 @@ export default [
             //     console.log('child process eixt ,exit:' + code); 
             //     });
 
-            let post  = new Post({title: "faewfa"});
-            console.log(post.title);
+            let post  =await Post.create({title: "titleindetest", body: "titleindextesttitleindextesttitleindextest"})
+            // console.log(rlt);
+            post.title = "新标题"
+            post.save();
+            console.log(post.tags);
             
-            await post.save();
-            await Post.findOne();
+            
+            
             try {
                 
                 return h.view('index', {

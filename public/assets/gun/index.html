@@ -13,25 +13,25 @@
     <script>
          var gun = Gun('http://localhost:8000/gun');
          var sea = Gun.SEA;
-            sea.pair(function(pair){
-                 console.log(pair);
-                 var alias = "alice"
-                var pass = "secret";
-                var salt = 1; // random
-               sea.work(alias, pass, function(proof){
-                        sea.encrypt(pair, proof, function(auth){
-                            console.log(auth); // data saved in a cryptographically linked user graph
-                            gun.get("first_auth").put({auth}, function(ack){
-                                console.log(ack);
-                                
-
-                            });
-
-                        });
-                }); // don't do this! (pass, salt) instead!
-           
-
-            }); // generate a new key pair
+         gun.get('root').get('posts').map(function(data, key){
+             if(key !== 'title'){
+                 return data;
+             }else{
+                 return undefined
+             }
+         }).on(function(data, key){
+             console.log(key, data);
+             
+         })
+         gun.get('root').get('posts_body').map(function(data, key){
+             let match = key.match(/身体/i);
+             if(match){
+                 return data
+             }
+         }).on(function(data, key){
+             console.log(key, data);
+             
+         })
           
             
     </script>

@@ -1,26 +1,29 @@
 
 import AppModel from '../core/model';
 import User from './User';
+import Tag from './Tag'
+import Joi from 'joi';
 
 
 
 export default class New extends AppModel {
     static setFeilds(){
         return {
-            title: "VARCHAR(20)",
+            title: Joi.string().max(50).required(),
         
-            belongsTo: User,
+            body: Joi.string().min(20).required(),
+        
         }
     }
-    constructor(feilds){
-        super(feilds);
-        this.validFields({
-            
-            title: String,
+
+    static setRelations(){
+        return {
+            hasMany: Tag,
+
         
-            BelongsTo: User,
-        
-        })
+            belongsTo: [User, Tag],
+
+        }
     }
 }
 

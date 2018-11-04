@@ -1,6 +1,7 @@
 
 import AppModel from '../core/model';
 
+import Joi from 'joi';
 
 import Post from './Post.js';
 
@@ -8,21 +9,17 @@ import Post from './Post.js';
 export default class Tag extends AppModel {
     static setFeilds(){
         return {
-            name: "VARCHAR(20)",
-        
-            hasMany: Post,
-            belongsTo: Post
+            name: Joi.string().max(50).required(),
         }
     }
-    constructor(feilds){
-        super(feilds);
-        this.validFields({
-            
-            name: String,
+    static setRelations(){
+        return {
+            hasMany: Post,
+
         
-            hasManyAndBelongsTo: Post,
-        
-        })
+            belongsTo: Post,
+
+        }
     }
 }
 
