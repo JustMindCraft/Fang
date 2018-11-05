@@ -11,6 +11,7 @@ import registerControllers from '../core/registerControllers';
 import controllers from '../controllers';
 import loadModels from '../models';
 import config from '../config/index';
+import gun from '../core/gun';
 
 import ss from '../secrects.json';
 
@@ -67,6 +68,21 @@ const validateSimple = async (request)=> {
 
     
     console.log('uuid', request.state.uuid);
+    if(request.state.uuid){
+        let getSession = () => {
+            return new Promise((resolve, reject)=>{
+                gun.get("login_session").get(request.state.uuid).once((data, key)=>{
+                    resolve(data);
+                })
+                
+            })
+        }
+
+        let rlt = await getSession();
+        console.log(rlt);
+    }else{
+        return {isValid: false, credentials: {msg: "cookie missing"}}
+    }
     
     return { isValid: true, credentials: {} };
 };
@@ -175,7 +191,7 @@ const init = async () => {
     });
     server.route({  
         method: [ 'GET', 'POST' ],
-        path: '/{any*}',config: {  auth: false },
+        path: '/{any*}', config: {  auth: false },
         handler: (request, h) => {
           const accept = request.headers.accept
             console.log(request.params);

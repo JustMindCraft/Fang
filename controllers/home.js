@@ -4,14 +4,10 @@ export default [
     {
         method: 'GET',
         path: '/',
-        options: {
-            auth: 'simple'
-        },
+        config: {  auth: false },
         handler: async (request, h) => {
             console.log(request.state);
-            
             try {
-                
                 return h.view('index', {
                     title: "正觉工场 |　首页",
                     logined: ""

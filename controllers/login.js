@@ -33,10 +33,21 @@ export default
         config: {  auth: false },
 
         handler: async (request, h) => {
-            console.log(request.auth);
-            console.log(request.payload);
+            if(request.payload.userparams==''){
+                let msg = "邮箱或者用户名不得为空";
+                msg = encodeURI(msg);
+                return h.redirect(`/login?msg=${msg}`);
+            }
+            if(!request.payload.password){
+                let msg = "密码不得为空";
+                msg = encodeURI(msg);
+                return h.redirect(`/login?msg=${msg}`);
+
+            }
+
+            let password = request.payload.password;
             
-           return h.redirect('/login?msg=trying');
+            return 0
             
         }
     }
