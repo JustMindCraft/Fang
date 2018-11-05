@@ -11,20 +11,30 @@ import registerControllers from '../core/registerControllers';
 import controllers from '../controllers';
 import loadModels from '../models';
 import config from '../config/index';
+
+import ss from '../secrects.json';
+
 const Inert = require('inert');
 const Gun   = require('gun');
 
 
+let  secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
 
 
 
 const JWT    = require('jsonwebtoken');
-const secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
+
+if(!ss){
+    console.log("添加文件/secrects.json的main节点，填写您的密钥");
+}else{
+    secret = ss.main;
+
+}
 const people = { // our "users database"
     1: {
       id: 1,
       name: 'Jen Jones',
-      scope: ["user"]
+      scope: ["user","admin"]
     }
 };
 const token = JWT.sign(people[1], secret); // synchronous
@@ -32,6 +42,7 @@ console.log(token);
 
 // bring your own validation function
 const validate = async function (decoded, request, h) {
+    console.log(request.auth);
     
     console.log(people[decoded.id].scope);
     
@@ -42,6 +53,22 @@ const validate = async function (decoded, request, h) {
     else {
       return { credentials: {scope: people[decoded.id].scope, msg: "公钥"}, isValid: true };
     }
+};
+const users = {
+    john: {
+        username: 'john',
+        password: '$2a$10$iqJSHD.BGr0E2IxQwYgJmeP3NvhPrXAeLSaGCj6IR/XU5QtjVu5Tm',   // 'secret'
+        name: 'John Doe',
+        id: '2133d32a'
+    }
+};
+
+const validateSimple = async (request)=> {
+
+    
+    console.log('uuid', request.state.uuid);
+    
+    return { isValid: true, credentials: {} };
 };
 
 //
@@ -68,7 +95,7 @@ const init = async () => {
     await server.register(Inert);
 
     await server.register(require('hapi-auth-jwt2'));
-
+    await server.register(require('hapi-auth-basic'));
     
     await server.start();
 
@@ -80,11 +107,22 @@ const init = async () => {
         algorithms: [ 'HS256' ]    // specify your secure algorithm
       } // pick a strong algorithm
     });
+    server.auth.strategy('simple', 'basic', { validate: validateSimple });
+
   
     server.auth.default({
         strategy: 'jwt',
         scope: 'admin'
       });
+    
+    server.state('data', {
+        ttl: 24 * 60 * 60 * 1000,
+        isSecure: false,
+        isHttpOnly: false,
+        encoding: 'base64json',
+        clearInvalid: false, // remove invalid cookies
+        strictHeader: true // don't allow violations of RFC 6265
+    });
 
     server.views({
         engines: { ejs: Ejs },
@@ -166,7 +204,7 @@ const init = async () => {
             options: {
                 auth: {
                     strategy: 'jwt',
-                    scope: ['+admin', "!nobody"]
+                    scope: ['+admin', "!nobody", "+user"]
                 }
             }
           }

@@ -14,9 +14,7 @@
             <div class="col s12 flow-text reg-form-center">创建一个正觉账号</div>
             <form id="reg_form" action="/reg" method="POST" class="col s12 flow-text">
                 <div class="row">
-                        <div>
-                                <div class="input-field col s12"><%= msg %></div>
-                        </div>
+                      
                         <div class="row">
                                 <div class="input-field col s12">
                                   <input id="email" type="email" name="email" class="validate">
@@ -44,7 +42,7 @@
                         
                         <div class="row">
                             <div class="input-field col s12">
-                              <input id="password-repeat" type="password"  class="validate">
+                              <input id="password-repeat" type="password" name="password_repeat"  class="validate">
                               <label for="password-repeat">重复您的密码</label>
                             </div>
                         </div>
@@ -63,8 +61,46 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if("<%=msg %>"=== "trying"){
-            M.toast({html: 'I am a toast'});
+        var gun = window.Gun('http://localhost:8000/gun');
+        var sea = Gun.SEA;
+
+        if("<%=reg_session %>"!==''){
+            gun.get("zhengjue").get("reg_sessions").get("<%=reg_session %>").once(function(data,key){
+                console.log(data);
+                if(data!== null){
+                    $("#email").val(data.email);
+                    $("#password").val(data.password);
+                    $("#username").val(data.username);
+                    $("#password-repeat").val(data.password_repeat);
+                    M.updateTextFields();
+                    gun.get("zhengjue").get("reg_sessions").get("<%=reg_session %>").put(null, function(ack){
+                        console.log(ack);
+                    
+                    });
+
+                }
+               
+               
+               
+
+            })
+
+        }
+
+        
+
+        if("<%=msg %>"=== "username_repeat"){
+            $("#username-helper").attr("data-error", "用户名被占用");
+            $("#username").attr("class", "validate invalid");
+            
+
+        }
+        if("<%=msg %>"=== "email_repeat"){
+            $("#email-helper").attr("data-error", "邮箱已经被占用");
+            $("#email").attr("class", "validate invalid");
+            
+           
+            
 
         }
 
@@ -111,25 +147,6 @@
                 $(e.target).find("#password").attr("class", "validate invalid");
                 return false;
             }
-            
-            // var gun = Gun('http://localhost:8000/gun');
-            // var sea = Gun.SEA;
-            
-            
-            
-            // sea.pair(function(pair){
-            //     var pass =  fake_password;
-            //     var salt = Math.random(); // random
-            //         sea.work(pass, salt, function(proof){
-            //         sea.encrypt(pair, proof, function(auth){
-            //             console.log(auth);
-                        
-                        
-            //         });
-            //     }); 
-               
-            // }) // generate a new key pair
-          
             
 
             return true;

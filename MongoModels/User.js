@@ -8,6 +8,7 @@ export const UserValidSchema = {
     email: Joi.string().email({ minDomainAtoms: 2 }),
 
     password: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
+    password_repeat: Joi.string().regex(/^[a-zA-Z0-9]{3,30}$/).required(),
 }
 
 const UserSchema = new mongoose.Schema({
@@ -22,9 +23,26 @@ const UserSchema = new mongoose.Schema({
         unique: true
       },
     password: String,
-    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }]
+    password_repeat: String,
+    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
+    roles: [{ type: Schema.Types.ObjectId, ref: 'Role' }]
   });
 
+
+
   const User = mongoose.model('User', UserSchema);
+
+  export async function auth(userparams, password){
+    let user = await User.findOne({email: userparams, password});
+    if(!user){
+      user = await  User.findOne({email: userparams, password});
+      if(!user){
+        return 404
+      }else{
+        return user;
+      }
+    }
+
+  }
 
   export default  User;
