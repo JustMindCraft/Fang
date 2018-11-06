@@ -1,4 +1,6 @@
 import Joi from 'joi';
+const bcrypt = require('bcrypt-nodejs');
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
@@ -33,13 +35,25 @@ const UserSchema = new mongoose.Schema({
   const User = mongoose.model('User', UserSchema);
 
   export async function auth(userparams, password){
-    let user = await User.findOne({email: userparams, password});
+    let user = await User.findOne({email: userparams});
+    
     if(!user){
-      user = await  User.findOne({email: userparams, password});
+      user = await  User.findOne({username: userparams});
       if(!user){
-        return 404
+
+        return false
       }else{
+       
+        let auth = bcrypt.compareSync(password,  user.password); 
+        return auth
+      }
+    }else{
+
+      let auth = bcrypt.compareSync(password,  user.password); 
+      if(auth){
         return user;
+      }else{
+        return false;
       }
     }
 

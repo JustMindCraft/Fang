@@ -1,5 +1,5 @@
 import User, { UserValidSchema } from '../MongoModels/User';
-
+import menu from '../config/menu';
 import Joi from 'joi';
 
 import {gun, Gun} from '../core/gun'
@@ -15,6 +15,16 @@ export default
         config: {auth: false},
     
         handler: async (request, h) => {
+
+            console.log(request.auth);
+            
+            let scope = [];
+            
+            if (request.auth.credentials) {
+                 scope = request.auth.credentials.scope;
+            }
+
+            let render_menu = menu(scope);
         
             try {
                 
@@ -22,6 +32,7 @@ export default
                         title: '正觉工场 | 创建正觉账号 ',
                         msg: request.query.msg,
                         reg_session: request.query.reg_session,
+                        menu: render_menu
                     });
              } catch (error) {
                 console.error(error);
@@ -62,11 +73,9 @@ export default
 
             let putRegSession =(userParams)=> {
                 let uuid = new require("uuid/v4")();
-                console.log(uuid);
     
                 return new Promise((rel, rej)=>{
                     gun.get("zhengjue").get("reg_sessions").get(uuid).put({...userParams}, ack => {
-                        console.log(ack);
                         
                         if (ack.ok === 1) {
                             

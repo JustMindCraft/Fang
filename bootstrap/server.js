@@ -11,8 +11,8 @@ import registerControllers from '../core/registerControllers';
 import controllers from '../controllers';
 import loadModels from '../models';
 import config from '../config/index';
-import gun from '../core/gun';
-
+import Role from '../MongoModels/Role';
+import menu from '../config/menu';
 import ss from '../secrects.json';
 
 const Inert = require('inert');
@@ -68,21 +68,6 @@ const validateSimple = async (request)=> {
 
     
     console.log('uuid', request.state.uuid);
-    if(request.state.uuid){
-        let getSession = () => {
-            return new Promise((resolve, reject)=>{
-                gun.get("login_session").get(request.state.uuid).once((data, key)=>{
-                    resolve(data);
-                })
-                
-            })
-        }
-
-        let rlt = await getSession();
-        console.log(rlt);
-    }else{
-        return {isValid: false, credentials: {msg: "cookie missing"}}
-    }
     
     return { isValid: true, credentials: {} };
 };
@@ -112,6 +97,7 @@ const init = async () => {
 
     await server.register(require('hapi-auth-jwt2'));
     await server.register(require('hapi-auth-basic'));
+    await server.register(require('hapi-auth-cookie'));
     
     await server.start();
 
@@ -125,6 +111,53 @@ const init = async () => {
     });
     server.auth.strategy('simple', 'basic', { validate: validateSimple });
 
+    const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
+    server.app.cache = cache;
+
+    server.auth.strategy('session', 'cookie', {
+        password: 'password-should-be-32-characters',
+        cookie: 'sid',
+        redirectTo: '/login',
+        isSecure: false,
+        validateFunc: async (request, session) => {
+            console.log("on cookie valid", request.auth);
+            console.log({session});
+            
+
+            const cached = await cache.get(session.uuid);
+
+            console.log(cached);
+            
+            if(!cached){
+                return {
+                    valid: false,
+                }
+            }
+            const token = JWT.sign(cached.user, secret);
+            let roles = ['loginedUser'];
+
+            for (let index = 0; index < cached.user.roles.length; index++) {
+                const role = cached.user.roles[index];
+                let roleObj = await Role.findById(role);
+                roles.push(roleObj.name);
+                
+            }
+
+            console.log({roles});
+            
+
+            let out =  {
+                valid: true,
+                credentials:{
+                    token,
+                    scope: roles,
+                }
+            };
+            console.log("roles", out.credentials.scope);
+            
+            return out;
+        }
+    });
   
     server.auth.default({
         strategy: 'jwt',
@@ -191,17 +224,30 @@ const init = async () => {
     });
     server.route({  
         method: [ 'GET', 'POST' ],
-        path: '/{any*}', config: {  auth: false },
+        path: '/{any*}', 
+        options: {
+            auth: {
+                strategy: 'session',
+                scope: ["loginedUser"]
+            }
+        },
         handler: (request, h) => {
           const accept = request.headers.accept
             console.log(request.params);
-            
+            let scope = [];
+
+            if (request.auth.credentials) {
+                 scope = request.auth.credentials.scope;
+            }
+
+            let render_menu = menu(scope); 
           if (accept && accept.match(/json/)) {
             return Boom.notFound('Fuckity fuck, this resource isn’t available.')
           }
       
           return h.view('404', {
-              title: "正觉工场|404|NOT FOUND|页面未找到"
+              title: "正觉工场|404|NOT FOUND|页面未找到",
+              menu: render_menu,
           })
         }
       })

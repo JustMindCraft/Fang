@@ -1,20 +1,36 @@
-import Post from "../models/Post";
+
+import menu from '../config/menu';
 
 export default [
     {
         method: 'GET',
         path: '/',
-        config: {  auth: false },
+        options: {
+            auth: {
+                strategy: 'session',
+                mode: "try",
+            }
+        },
         handler: async (request, h) => {
-            console.log(request.state);
+            console.log("home", request.auth);
+            
+            let scope = [];
+
+            if (request.auth.credentials) {
+                 scope = request.auth.credentials.scope;
+            }
+
+            let render_menu = menu(scope);
+
+
             try {
                 return h.view('index', {
                     title: "正觉工场 |　首页",
-                    logined: ""
+                    menu: render_menu
                 });
                 
             } catch (error) {
-                console.error(error);
+                return error;
                 
             }
             

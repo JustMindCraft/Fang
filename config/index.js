@@ -22,7 +22,7 @@ export default {
 		driver: "mongo",
 	},
 	mongodb: {
-		url: "mongodb://localhost:27017/webtorrentadmin"
+		url: "mongodb://localhost:27017/fang_dev"
 	},
 	mysql: {
 		host: '139.198.6.232',
