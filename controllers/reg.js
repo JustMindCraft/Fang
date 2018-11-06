@@ -101,6 +101,8 @@ export default
 
                         let token = null;
 
+                       
+
                         //获取jwt token
                         
                         if (ack.ok === 1) {
@@ -128,7 +130,13 @@ export default
             }
             
             try {
+                const bcrypt = require('bcrypt-nodejs');
+                var salt = bcrypt.genSaltSync(Math.random());
+                var hash = bcrypt.hashSync(user.password, salt);
+
+                user.password = hash;
                 await user.save();
+                
                 return await putLoginSession(user, 66666);
                 
                 

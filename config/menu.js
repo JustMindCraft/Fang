@@ -31,7 +31,38 @@ const allMenus =  [
     },
     {
         name: "文章管理",
+        isFold: true,
         path: '/posts',
+        scope: ['superAdmin']
+    },
+    {
+        name: "商品管理",
+        isFold: true,
+        path: '/posts',
+        scope: ['superAdmin']
+    },
+    {
+        name: "角色管理",
+        isFold: true,
+        path: '/roles',
+        scope: ['superAdmin']
+    },
+    {
+        name: "主页管理",
+        isFold: true,
+        path: '/roles',
+        scope: ['superAdmin']
+    },
+    {
+        name: "系统管理",
+        isFold: true,
+        path: '/roles',
+        scope: ['superAdmin']
+    },
+    {
+        name: "应用管理",
+        isFold: true,
+        path: '/apps',
         scope: ['superAdmin']
     }
 ]
@@ -47,6 +78,8 @@ export default function menu(scope){
                 continue;
             }
             const item = allMenus[index];
+            console.log("item_fold", item.isFold);
+            
             if(item.scope.includes(role)){
                 menu.push({
                     name: item.name,
