@@ -32,12 +32,13 @@ p {
 }
 .sidenav{
   width: 44%;
+  color: black;
 }
 
 .main-content{
   position: relative;
   top: 66px;
-  min-height: 568px;
+  min-height: 800px;
 }
 
 .parallax-container {

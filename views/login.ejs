@@ -14,13 +14,11 @@
             <div class="col s12 flow-text login-form-center">登录您的正觉账号</div>
             <form action="/login" method="POST" class="col s12 flow-text">
                 <div class="row">
-                        <div>
-                                <div class="input-field col s12"><%= msg %></div>
-                        </div>
+                       
                         <div class="row">
                                 <div class="input-field col s12">
-                                  <input id="email" type="email" name="email" class="validate">
-                                  <label for="email">电子邮箱</label>
+                                  <input id="email" type="text" name="userparams" class="validate">
+                                  <label for="email">电子邮箱|用户名</label>
                                 </div>
                         </div>
                         <div class="row">
@@ -44,9 +42,11 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        if("<%=msg %>"=== "trying"){
-            M.toast({html: 'I am a toast'});
+        if("<%=msg %>"!== ''){
+            M.toast({html: '<%=msg %>'});
 
+        }else{
+            return false;
         }
     });
 

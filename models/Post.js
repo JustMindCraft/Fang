@@ -6,21 +6,33 @@ import Tag from './Tag.js';
 
 import User from './User.js';
 
+import Joi from 'joi';
 
 export default class Post extends AppModel {
-    constructor(feilds){
-        super(feilds, Post);
-        this.validFields({
-            
-            title: [String,{required: true, minLength: 10}],
+    
+    static setFeilds(){
+        return {
+            title: Joi.string().max(50).required(),
         
-            body: String,
+            body: Joi.string().min(20).required(),
         
+        }
+    }
+
+    static setUniqueFeild(){
+        return {
+            title: 'unique',
+        }
+    }
+
+    static setRelations(){
+        return {
             hasMany: Tag,
         
-            belongsTo: User,
-        
-        })
+            belongsTo: [User, Tag],
+
+        }
     }
+    
 }
 

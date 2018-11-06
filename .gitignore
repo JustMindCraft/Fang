@@ -2,3 +2,6 @@
 package-lock.json
 /leveldata
 /lokidata
+/radata
+/datastore/gunblock
+secrects.json

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>gunjs Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+</head>
+<body>
+   <script>
+        var sea = Gun.SEA;
+        var pair = await sea.pair(); // generate a new key pair
+        console.log(pair);
+        var alias = "alice"
+        var pass = "secret";
+        var salt = 1; // random
+        var proof = await sea.work(alias, pass); // don't do this! (pass, salt) instead!
+        var auth = await sea.encrypt(pair, proof);
+        console.log(auth); // data saved in a cryptographically linked user graph
+        // now on another machine...
+        var login = await sea.work(alias, pass);
+        var keys = await sea.decrypt(auth, login); // encrypted auth loaded from graph
+        console.log(keys); // equal to the original key pair   
+    </script>
+   
+</body>
+</html>

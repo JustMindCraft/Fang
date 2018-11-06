@@ -1,20 +1,25 @@
 
 import AppModel from '../core/model';
 
+import Joi from 'joi';
 
 import Post from './Post.js';
 
 
 export default class Tag extends AppModel {
-    constructor(feilds){
-        super(feilds);
-        this.validFields({
-            
-            name: String,
+    static setFeilds(){
+        return {
+            name: Joi.string().max(50).required(),
+        }
+    }
+    static setRelations(){
+        return {
+            hasMany: Post,
+
         
-            hasManyAndBelongsTo: Post,
-        
-        })
+            belongsTo: Post,
+
+        }
     }
 }
 
