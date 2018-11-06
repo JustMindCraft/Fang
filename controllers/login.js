@@ -71,7 +71,18 @@ export default
                 return h.redirect(`/login?msg=${msg}`);
 
             }
-            let user = await auth(userparams, password);
+            let user = null;
+            try {
+                user = await auth(userparams, password);
+                
+            } catch (error) {
+                console.log(error);
+                    
+                let msg = "服务器不知道出了什么问题";
+                msg = encodeURI(msg);
+                return h.redirect(`/login?msg=${msg}`);
+                
+            }
             if(user){
 
                 let doLogin = expireTime => {
@@ -96,8 +107,17 @@ export default
                         })
                     })
                 }
+                try {
+                     return await doLogin( 24 * 60 * 60 * 1000);
+                    
+                } catch (error) {
+                    console.log(error);
+                    
+                    let msg = "服务器不知道出了什么问题";
+                    msg = encodeURI(msg);
+                    return h.redirect(`/login?msg=${msg}`);
+                }
 
-                return await doLogin( 24 * 60 * 60 * 1000);
 
             }else{
                 let msg = "用户密码不匹配";

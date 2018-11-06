@@ -35,17 +35,24 @@ const UserSchema = new mongoose.Schema({
   const User = mongoose.model('User', UserSchema);
 
   export async function auth(userparams, password){
+    console.log(userparams, password);
+    
     let user = await User.findOne({email: userparams});
     
     if(!user){
-      user = await  User.findOne({username: userparams});
+      user = await User.findOne({username: userparams});
       if(!user){
 
-        return false
+        return false;
+
       }else{
        
         let auth = bcrypt.compareSync(password,  user.password); 
-        return auth
+        if(auth){
+          return user;
+        }else{
+          return false;
+        }
       }
     }else{
 

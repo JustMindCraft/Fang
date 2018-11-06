@@ -21,7 +21,7 @@ export default [
             }
 
             let render_menu = menu(scope);
-
+            console.log({render_menu});
 
             try {
                 return h.view('index', {

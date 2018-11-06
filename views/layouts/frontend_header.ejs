@@ -24,9 +24,28 @@
               <li><a href="/login">登录</a></li>
 
             <% }else{ %>
+             
               <% for(var i=0; i < menu.length; i++){ %>
-              <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+               
+                <% if(menu[i].isFold === false) { %>
+                  <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+                <% } %>
               <% } %>
+              <% var hasFold = false %>
+             <!-- Dropdown Structure -->
+              <ul id='dropdown1' class='dropdown-content'>
+                <% for(var i=0; i < menu.length; i++){ %>
+             
+                  <% if(menu[i].isFold === true) { %>
+                    <% hasFold = true %>
+                    <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+                  <% } %>
+                <% } %>
+              </ul>
+
+              <% if(hasFold === true) { %>
+                <a class='dropdown-trigger btn' href='#' data-target='dropdown1'>管理面板</a>
+              <% }%>
 
 
             <% } %>
@@ -42,8 +61,28 @@
 
           <% }else{ %>
             <% for(var i=0; i < menu.length; i++){ %>
-            <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+               
+              <% if(menu[i].isFold === false) { %>
+                <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+              <% } %>
             <% } %>
+
+            <% if(hasFold === true) { %>
+              <ul class="collapsible">
+                  <li>
+                    <div class="collapsible-header">管理面板</div>
+                    <div class="collapsible-body">
+                            <% for(var i=0; i < menu.length; i++){ %>
+                         
+                              <% if(menu[i].isFold === true) { %>
+                                <% hasFold = true %>
+                                <a href="<%= menu[i].path %>"><%= menu[i].name %></a>
+                              <% } %>
+                            <% } %>
+                    </div>
+                  </li>
+              </ul>
+            <% }%>
 
 
           <% } %>
@@ -52,3 +91,12 @@
     </div>
   </nav>
   <div class="main-content">
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      var dropElems = document.querySelectorAll('.dropdown-trigger');
+      var instances = M.Dropdown.init(dropElems, {});
+      var colElems = document.querySelectorAll('.collapsible');
+      instances = M.Collapsible.init(colElems, {});
+    });
+  </script>

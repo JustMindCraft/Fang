@@ -158,35 +158,6 @@ export default
 
                 
             }
-
-
-
-           
-
-            
-        }
-    },
-    {
-        method: "POST",
-
-        path: '/reg_valid',
-        
-        config: {auth: false},
-
-        handler: async (request, h) => {
-            
-            let Joi = require('joi');
-            let valid = User.setFeilds();
-            const result = Joi.validate(request.payload, valid);
-            
-            if(result.error){
-                 return result.error.details;
-
-            }else{
-                return 249967
-
-            }
-            
         }
     }
 ]

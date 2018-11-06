@@ -241,6 +241,8 @@ const init = async () => {
             }
 
             let render_menu = menu(scope); 
+            
+            
           if (accept && accept.match(/json/)) {
             return Boom.notFound('Fuckity fuck, this resource isn’t available.')
           }
@@ -272,11 +274,7 @@ const init = async () => {
           }
     )
     server.events.on('request', (request, h) => {
-
         // console.log(request.path, request.auth);
-        
-        
-        
     });
     console.log(`Server running at: ${server.info.uri}`);
 };
