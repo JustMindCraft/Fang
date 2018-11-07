@@ -62,7 +62,6 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var gun = window.Gun(window.location.hostname+'/gun');
-        var sea = Gun.SEA;
 
         if("<%=reg_session %>"!==''){
             gun.get("zhengjue").get("reg_sessions").get("<%=reg_session %>").once(function(data,key){
