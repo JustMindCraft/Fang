@@ -61,7 +61,7 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var gun = window.Gun('http://localhost:8000/gun');
+        var gun = window.Gun(window.location.hostname+'/gun');
         var sea = Gun.SEA;
 
         if("<%=reg_session %>"!==''){
