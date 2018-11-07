@@ -20,6 +20,7 @@
     <div class="nav-wrapper container">
       <a id="logo-container" href="/" class="brand-logo">正觉工场</a>
       <ul class="right hide-on-med-and-down">
+          <% var hasFold = false %>
             <% if(menu.length === 0) {%>
               <li><a href="/login">登录</a></li>
 
@@ -31,14 +32,14 @@
                   <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
                 <% } %>
               <% } %>
-              <% var hasFold = false %>
+              
              <!-- Dropdown Structure -->
               <ul id='dropdown1' class='dropdown-content'>
-                <% for(var i=0; i < menu.length; i++){ %>
+                <% for(var j=0; j < menu.length; j++){ %>
              
-                  <% if(menu[i].isFold === true) { %>
+                  <% if(menu[j].isFold === true) { %>
                     <% hasFold = true %>
-                    <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+                    <li><a href="<%= menu[j].path %>"><%= menu[j].name %> </a></li>
                   <% } %>
                 <% } %>
               </ul>
@@ -60,10 +61,10 @@
             <li><a href="/login">登录</a></li>
 
           <% }else{ %>
-            <% for(var i=0; i < menu.length; i++){ %>
+            <% for(var k=0; k < menu.length; k++){ %>
                
-              <% if(menu[i].isFold === false) { %>
-                <li><a href="<%= menu[i].path %>"><%= menu[i].name %></a></li>
+              <% if(menu[k].isFold === false) { %>
+                <li><a href="<%= menu[k].path %>"><%= menu[k].name %></a></li>
               <% } %>
             <% } %>
 
@@ -72,11 +73,11 @@
                   <li>
                     <div class="collapsible-header">管理面板</div>
                     <div class="collapsible-body">
-                            <% for(var i=0; i < menu.length; i++){ %>
+                            <% for(var l=0; l < menu.length; l++){ %>
                          
-                              <% if(menu[i].isFold === true) { %>
+                              <% if(menu[l].isFold === true) { %>
                                 <% hasFold = true %>
-                                <a href="<%= menu[i].path %>"><%= menu[i].name %></a>
+                                <a href="<%= menu[l].path %>"><%= menu[l].name %></a>
                               <% } %>
                             <% } %>
                     </div>
