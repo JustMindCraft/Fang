@@ -8,7 +8,7 @@
 
 nav ul a,
 nav .brand-logo {
-  color: #444;
+  color: white;
 }
 
 nav.nav-header {
@@ -37,8 +37,11 @@ p {
 
 .main-content{
   position: relative;
-  top: 66px;
   min-height: 800px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: url(/imgs/bg-all.jpg);
 }
 
 .parallax-container {
@@ -76,4 +79,7 @@ p {
 
 footer.page-footer {
   margin: 0;
+  background: url(/imgs/bg-footer.jpg) no-repeat;
+  color: black;
+  background-size: 100% 98%;
 }

@@ -1,9 +1,162 @@
 
   <% include ./layouts/frontend_header %>
-  <div id="index-banner" class="parallax-container">
-    <div class="section no-pad-bot">
+  <style>
+    
+    
+   
+    @media (max-width: 351px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 281px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      #preview-video{
+        position: absolute;
+        top: -60px;
+        width: 100%;
+        height: 500px;
+      }
+    }
+    @media (max-width: 360px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 291px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      #preview-video{
+        position: absolute;
+        top: -60px;
+        width: 100%;
+        height: 500px;
+      }
+    }
+    @media (max-width: 375px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 281px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      #preview-video{
+        position: absolute;
+        top: -60px;
+        width: 100%;
+        height: 500px;
+      }
+    }
+   
+    @media (max-width: 415px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 321px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      #preview-video{
+        position: absolute;
+        top: -45px;
+        width: 100%;
+        height: 500px;
+      }
+    }
+    @media (min-width: 412px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 321px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+      }
+      #preview-video{
+        position: absolute;
+        top: -45px;
+        width: 100%;
+        height: 500px;
+      }
+    }
+    @media (min-width: 768px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100%;
+        z-index: 500;
+        height: 495px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #preview-video{
+        position: absolute;
+        top: -7px;
+        width: 100%;
+        height: 569px;
+      }
+    }
+    
+   
+   
+    @media (min-width: 1033px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100% !important;
+        z-index: 500;
+        height: 520px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #preview-video{
+        position: absolute;
+        top: -187px;
+        width: 100% !important;
+        height: 1000px;
+      }
+    }
+    @media (min-width: 1700px) {
+      .top-offset{
+        position: relative !important;
+        background-color: #2116169e;
+        width: 100% !important;
+        z-index: 500;
+        height: 580px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+      }
+      #preview-video{
+        position: absolute;
+        top: -174px;
+        width: 100% !important;
+        height: 1500px;
+      }
+    }
+   
+  </style>
+  <div id="index-banner" class="parallax-container" style="position: relative; top: -101px;">
+    <div class="section no-pad-bot top-offset">
       <div class="container">
-        <br><br>
         <h1 class="header center teal-text text-lighten-2"></h1>
         <div class="row center">
           <h5 class="header col s12 light">您值得在赛博空间有一席之地</h5>
@@ -11,15 +164,17 @@
         <div class="row center">
           <a  href="/login" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">立即开始</a>
         </div>
-        <br><br>
 
       </div>
     </div>
-    <div class="parallax"><img src="/imgs/background1.jpg" alt="Unsplashed background img 1"></div>
+      <div>
+        <video id="preview-video" loop="loop" autoplay="autoplay" src="/imgs/preview.mp4" alt="Unsplashed background img 1">
+        
+      </div>
   </div>
 
 
-  <div class="container">
+  <div class="container" style="position: relative; top: -101px;">
       <div class="section">
           <div class="row">
             <div class="col s12 center">
@@ -58,7 +213,7 @@
   </div>
 
 
-  <div class="parallax-container valign-wrapper">
+  <div class="parallax-container valign-wrapper" style="position: relative; top: -101px; z-index: 333;">
     <div class="section no-pad-bot">
       <div class="container">
         <div class="row center">
@@ -66,7 +221,7 @@
         </div>
       </div>
     </div>
-    <div class="parallax"><img src="/imgs/background2.jpg" alt="Unsplashed background img 2"></div>
+    <div class="parallax"><img src="/imgs/background.jpg" alt="Unsplashed background img 2"></div>
   </div>
 
   <div class="container">
@@ -105,12 +260,12 @@
                 </div>
             </div>
           </div>
-    
+          <br><br><br>
         </div>
   </div>
 
 
-  <div class="parallax-container valign-wrapper">
+  <div class="parallax-container valign-wrapper" style="position: relative;z-index: 333; ">
     <div class="section no-pad-bot">
       <div class="container">
         <div class="row center">
@@ -119,6 +274,7 @@
       </div>
     </div>
     <div class="parallax"><img src="/imgs/background3.jpg" alt="Unsplashed background img 3"></div>
+
   </div>
 
   <% include ./layouts/frontend_footer %>

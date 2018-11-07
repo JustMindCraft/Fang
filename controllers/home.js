@@ -26,7 +26,7 @@ export default [
             try {
                 return h.view('index', {
                     title: "正觉工场 |　首页",
-                    menu: render_menu
+                    menu: render_menu,
                 });
                 
             } catch (error) {
