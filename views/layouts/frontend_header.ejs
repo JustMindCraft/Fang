@@ -3,7 +3,26 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+ 
   <title><%= title %></title>
+  <!-- Set render engine for 360 browser -->
+  <meta name="renderer" content="webkit">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+  <link rel="apple-touch-icon-precomposed" href="assets/i/app-icon72x72@2x.png">
+
+  <!-- Tile icon for Win8 (144x144 + tile color) -->
+  <meta name="msapplication-TileImage" content="assets/i/app-icon72x72@2x.png">
+  <meta name="msapplication-TileColor" content="#0e90d2">
+
+  <!-- No Baidu Siteapp-->
+  <meta http-equiv="Cache-Control" content="no-siteapp"/>
 
   <!-- CSS  -->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -15,7 +34,7 @@
    <script src="/gun/gun.min.js"></script>
 </head>
 <body>
-  <nav class="nav-header" style="background-color:#0000003d; color: white;" role="navigation">
+  <nav class="nav-header" style="background-color:rgba(0, 0, 0, 0.23921568627450981); color: white;" role="navigation">
     <div class="nav-wrapper container">
       <a id="logo-container" href="/" class="brand-logo">正觉工场</a>
       <ul class="right hide-on-med-and-down">
@@ -60,6 +79,10 @@
       </ul>
 
       <ul id="nav-mobile" class="sidenav">
+          <li><a href="/">首页</a></li>
+          <li><a href="/page1">菜单1</a></li>
+          <li><a href="/page2">菜单2</a></li>
+          <li><a href="/page3">菜单3</a></li>
           <% if(menu.length === 0) {%>
             <li><a href="/login">登录</a></li>
 

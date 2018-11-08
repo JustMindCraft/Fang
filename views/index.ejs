@@ -149,7 +149,7 @@
         position: absolute;
         top: -174px;
         width: 100% !important;
-        height: 1500px;
+        height: 1500px; 
       }
     }
    
@@ -167,11 +167,32 @@
 
       </div>
     </div>
-      <div>
-        <video id="preview-video" loop="loop" autoplay="autoplay" src="/imgs/preview.mp4" alt="Unsplashed background img 1">
+      <div id="head-preview">
+        <video  id="preview-video" loop="loop" autoplay="autoplay" src="/imgs/preview.mp4" alt="Unsplashed background img 1">
         
       </div>
   </div>
+
+  <script>
+    function isWeiXin() {
+        var ua = window.navigator.userAgent.toLowerCase();
+        console.log(ua);//mozilla/5.0 (iphone; cpu iphone os 9_1 like mac os x) applewebkit/601.1.46 (khtml, like gecko)version/9.0 mobile/13b143 safari/601.1
+        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+        return true;
+        } else {
+        return false;
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function() {
+        if(isWeiXin()){
+          $("#head-preview > video").remove();
+          $("#head-preview").append('<img id="preview-video" src="/imgs/preview.gif">')
+        }
+        
+         
+      });
+  </script>
+  
 
 
   <div class="container" style="position: relative; top: -101px;">
@@ -276,5 +297,6 @@
     <div class="parallax"><img src="/imgs/background3.jpg" alt="Unsplashed background img 3"></div>
 
   </div>
+
 
   <% include ./layouts/frontend_footer %>
