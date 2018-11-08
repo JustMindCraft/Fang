@@ -83,3 +83,8 @@ footer.page-footer {
   color: black;
   background-size: 100% 98%;
 }
+
+.footer-copyright{
+  color: black;
+  font-size: 27px;
+}
