@@ -13,7 +13,8 @@ export default [
             }
         },
         handler: async (request, h) => {
-
+            console.log(request.auth.credentials);
+            
 
             let scope = [];
             

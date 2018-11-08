@@ -151,6 +151,7 @@ const init = async () => {
                 credentials:{
                     token,
                     scope: roles,
+                    role: cached.user.roles,
                 }
             };
             console.log("roles", out.credentials.scope);
@@ -228,7 +229,8 @@ const init = async () => {
         options: {
             auth: {
                 strategy: 'session',
-                scope: ["loginedUser"]
+                scope: ["loginedUser"],
+                mode: 'try'
             }
         },
         handler: (request, h) => {

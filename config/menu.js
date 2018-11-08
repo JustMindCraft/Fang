@@ -1,4 +1,6 @@
-const allMenus =  [
+import PACL from "../MongoModels/PACL";
+
+export const allMenus =  [
     {
         name: "个人中心",
         path: '/my',
@@ -66,6 +68,10 @@ const allMenus =  [
         scope: ['superAdmin']
     }
 ]
+
+
+
+
 
 export default function menu(scope){
     let menu = [];

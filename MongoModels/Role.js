@@ -6,7 +6,8 @@ const RoleSchema = new mongoose.Schema({
         index: true,
         unique: true
       },
-    users: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+    users: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    allowPaths: Object
   });
 
   const Role = mongoose.model('Role', RoleSchema);

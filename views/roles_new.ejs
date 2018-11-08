@@ -1,0 +1,67 @@
+<% include ./layouts/frontend_header %>
+
+
+<div class="container">
+        <div class="row">
+            <div class="col s12 flow-text">新建角色</div>
+            <form id="reg_form" action="/roles/create" method="POST" class="col s12 flow-text">
+                <div class="row">
+                      
+                        <div class="row">
+                                <div class="input-field col s12">
+                                  <input id="role_name" type="text" name="role_name" class="validate">
+                                  <label for="role_name">角色名称</label>
+                                  <span id="email-helper" class="helper-text" data-error="" data-success=""></span>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>用户管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="/users"　name="user_query" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="/users/new" name="user_create"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="user_delete" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="user_update" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                               
+                        </div>
+                        
+                        <div class="row">
+                           
+                        </div>
+                        <div class="row">
+                                <div class="col s6"><Button type="submit" class="waves-effect waves-light btn red darken-1">新建角色</Button></div>
+                        </div>
+                       
+                </div>
+               
+            </form>
+               
+               
+        </div>
+
+</div>
+
+
+<% include ./layouts/frontend_footer %>
