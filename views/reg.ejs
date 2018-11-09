@@ -61,9 +61,11 @@
 </div>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var gun = window.Gun(window.location.origin+'/gun');
-
+        var gun = window.Gun('https://zhengjue.lododor.com/gun/');
+        
         if("<%=reg_session %>"!==''){
+            console.log("reg_session", "<%=reg_session %>");
+            
             gun.get("zhengjue").get("reg_sessions").get("<%=reg_session %>").once(function(data,key){
                 console.log(data);
                 if(data!== null){
