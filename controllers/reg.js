@@ -76,6 +76,7 @@ export default
     
                 return new Promise((rel, rej)=>{
                     gun.get("zhengjue").get("reg_sessions").get(uuid).put({...userParams}, ack => {
+                        console.log(userParams);
                         
                         if (ack.ok === 1) {
                             
