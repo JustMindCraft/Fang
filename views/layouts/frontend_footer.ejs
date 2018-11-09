@@ -41,11 +41,23 @@
 
 
   <!--  Scripts-->
-  <script src="https://res.cloudinary.com/da7efhqvt/raw/upload/v1541721645/zhengjue/js/materialize.min.js "></script>
-
   <script src="https://res.cloudinary.com/da7efhqvt/raw/upload/v1541722990/zhengjue/js/jquery-2.1.1.min.js"></script>
-
+  <script src="https://res.cloudinary.com/da7efhqvt/raw/upload/v1541721645/zhengjue/js/materialize.min.js "></script>
   <script src="https://res.cloudinary.com/da7efhqvt/raw/upload/v1541721644/zhengjue/js/init.js"></script>
-
+<script>
+  $('.carousel').ready(function(){
+    console.log('.carousel ready');
+    var elems = document.querySelectorAll('.carousel');
+      var instance = M.Carousel.init(elems, {
+        fullWidth: true,
+        numVisible: 1,
+        duration: 200,
+      });
+      setInterval(function(){
+        instance[0].next(1);
+      }, 3456)
+  
+  })
+</script>
   </body>
 </html>

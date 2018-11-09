@@ -1,213 +1,50 @@
 
   <% include ./layouts/frontend_header %>
   <style>
-    .cust-border{
-                    border-radius: 100px;
-                    height: 100px;
-                    width: 100px;
-                    display: flex;
-                    justify-content: center;
-                    justify-items: center;
-                    align-items: center;
-                    font-size: 20px;
-                    background-color: #E9A368;
-                    color: white;
-                    
+    .carousel-item img{
+      height: 450px;
+      max-height: 600px;
+      width: 80% !important;
     }
-    
-   
-    @media (max-width: 351px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 281px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-      #preview-video{
-        position: absolute;
-        top: -60px;
-        width: 100%;
-        height: 500px;
-      }
-    }
-    @media (max-width: 360px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 291px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-      #preview-video{
-        position: absolute;
-        top: -60px;
-        width: 100%;
-        height: 500px;
-      }
-    }
-    @media (max-width: 375px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 281px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-      #preview-video{
-        position: absolute;
-        top: -60px;
-        width: 100%;
-        height: 500px;
-      }
-    }
-   
-    @media (max-width: 415px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 321px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-      #preview-video{
-        position: absolute;
-        top: -45px;
-        width: 100%;
-        height: 500px;
-      }
-    }
-    @media (min-width: 412px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 321px;
-        display: flex;
-        flex-direction: column;
-        justify-content: flex-end;
-      }
-      #preview-video{
-        position: absolute;
-        top: -45px;
-        width: 100%;
-        height: 500px;
-      }
-    }
-    @media (min-width: 768px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100%;
-        z-index: 500;
-        height: 495px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      #preview-video{
-        position: absolute;
-        top: -7px;
-        width: 100%;
-        height: 569px;
-      }
-    }
-    
-   
-   
-    @media (min-width: 1033px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
+    @media only screen and (max-width: 500px) {
+      .carousel-item img{
         width: 100% !important;
-        z-index: 500;
-        height: 520px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      #preview-video{
-        position: absolute;
-        top: -187px;
-        width: 100% !important;
-        height: 1000px;
+        height: 300px;
       }
     }
-    @media (min-width: 1700px) {
-      .top-offset{
-        position: relative !important;
-        background-color: #2116169e;
-        width: 100% !important;
-        z-index: 500;
-        height: 580px;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-      }
-      #preview-video{
-        position: absolute;
-        top: -174px;
-        width: 100% !important;
-        height: 1500px; 
-      }
-    }
-   
   </style>
-  <div id="index-banner" class="parallax-container" style="position: relative; top: -101px;">
-    <div class="section no-pad-bot top-offset">
-      <div class="container">
-        <h1 class="header center teal-text text-lighten-2"></h1>
-        <div class="row center">
-          <h5 class="header col s12 light">助力中小企业营销升级，共享互联网技术成果</h5>
+<div style="display: flex;
+flex-direction: column;
+justify-content: center;
+justify-items: center;
+align-items: center;">
+    <div class="carousel carousel-slider center zhengjue-carousel" data-indicators="true">
+        <div class="carousel-fixed-item center">
+          <a class="btn  waves-effect red">立即开始</a>
         </div>
-        <div class="row center">
-          <a  href="/login" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">立即开始</a>
+        <div class="carousel-item center grey" href="#one!">
+          <img src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541730883/zhengjue/imgs/banner3.jpg" alt="">
+          
         </div>
-
+        <div class="carousel-item center brown" href="#two!">
+          <img src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541730883/zhengjue/imgs/banner2.jpg" alt="">
+        </div>
+        <div class="carousel-item center grey" href="#three!">
+          <img src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541730883/zhengjue/imgs/banner1.jpg" alt="">
+        </div>
+       
       </div>
-    </div>
-      <div id="head-preview">
-        <video  id="preview-video" loop="loop" autoplay="autoplay" src="https://res.cloudinary.com/da7efhqvt/video/upload/v1541721764/zhengjue/imgs/preview.mp4" alt="Unsplashed background img 1">
-        
-      </div>
-  </div>
 
-  <script>
-    function isWeiXin() {
-        var ua = window.navigator.userAgent.toLowerCase();
-        console.log(ua);//mozilla/5.0 (iphone; cpu iphone os 9_1 like mac os x) applewebkit/601.1.46 (khtml, like gecko)version/9.0 mobile/13b143 safari/601.1
-        if (ua.match(/MicroMessenger/i) == 'micromessenger') {
-        return true;
-        } else {
-        return false;
-        }
-      }
-      document.addEventListener('DOMContentLoaded', function() {
-        if(isWeiXin()){
-          $("#head-preview > video").remove();
-          $("#head-preview").append('<img id="preview-video" src="/imgs/preview.gif">')
-        }
-        
-         
-      });
-  </script>
+</div>
   
 
 
-  <div class="" style="position: relative; top: -101px;">
+
+
+  
+
+
+  <div class="" style="position: relative; top: 0px;">
       <div class="section">
           <div class="row">
             <div class="col s12 center">
