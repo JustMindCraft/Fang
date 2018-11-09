@@ -48,6 +48,8 @@
   $('.carousel').ready(function(){
     console.log('.carousel ready');
     var elems = document.querySelectorAll('.carousel');
+    console.log(elems);
+    if(elems.length !==0 ){
       var instance = M.Carousel.init(elems, {
         fullWidth: true,
         numVisible: 1,
@@ -56,6 +58,8 @@
       setInterval(function(){
         instance[0].next(1);
       }, 3456)
+    }
+     
   
   })
 </script>
