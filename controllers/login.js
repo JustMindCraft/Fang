@@ -15,7 +15,7 @@ export default
             auth: {
                 strategy: 'session',
                 mode: "try",
-                scope: ["loginedUser"]
+                scope: ["+loginedUser"]
             }
         },
     

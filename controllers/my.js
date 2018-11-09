@@ -9,7 +9,7 @@ export default [
         options: {
             auth: {
                 strategy: 'session',
-                scope: ["loginedUser"]
+                scope: ["+loginedUser"]
             }
         },
         handler: async (request, h) => {

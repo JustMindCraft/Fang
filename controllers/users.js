@@ -8,7 +8,7 @@ export default [
         options: {
             auth: {
                 strategy: 'session',
-                scope: ["loginedUser", "superAdmin"]
+                scope: ["+loginedUser"]
             }
         },
         handler: async (request, h) => {
