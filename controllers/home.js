@@ -26,7 +26,7 @@ export default [
             try {
                 return h.view('index', {
                     title: "正觉工场 |　首页",
-                    menu: render_menu,
+                    menu: request.auth.credentials? request.auth.credentials.menu: []
                 });
                 
             } catch (error) {

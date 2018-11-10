@@ -1,37 +1,27 @@
 import {Gun} from '../core/gun';
 import menu from '../config/menu';
+import User from '../MongoModels/User';
+
 require('gun/sea');
 
 export default [
     {
         method: 'GET',
         path: '/my',
-        options: {
-            auth: {
-                strategy: 'session',
-                scope: ["+loginedUser"]
-            }
-        },
+       
         handler: async (request, h) => {
-            console.log(request.auth.credentials);
-            
+            console.log("my 123", request.auth.credentials);
+           
 
-            let scope = [];
-            
-            if (request.auth.credentials) {
-                 scope = request.auth.credentials.scope;
-            }
-
-            let render_menu = menu(scope);
-
-            console.log("my", render_menu);
+            let user = await  User.findById(request.auth.credentials.userId);
             
             
             try {
                 return h.view('my', {
                     title: '正觉工场 | 个人中心 ',
                     msg: request.query.msg,
-                    menu: render_menu
+                    menu:  request.auth.credentials.menu,
+                    user,
                 });
                 
             } catch (error) {
@@ -42,6 +32,12 @@ export default [
             
             
             
-        }
+        },
+        options: {
+            auth: {
+                strategy: 'session',
+                scope: ['+loginedUser']
+            },
+        },
     }
 ]

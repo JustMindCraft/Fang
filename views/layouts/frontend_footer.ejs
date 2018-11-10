@@ -61,7 +61,20 @@
     }
      
   
-  })
+  });
+  $('.collapsible').ready(function(){
+      console.log("collapsible ready");
+      
+      var colElems = document.querySelectorAll('.collapsible');
+      var instances = M.Collapsible.init(colElems, {});
+      $('.collapsible').collapsible();
+    })
 </script>
+  <div class="row" style="position:fixed; z-index: 9999; background-color: yellow; width: 100%; bottom: -20px;">
+      <div class="col s3 btn">1</div>
+      <div class="col s3 btn">1</div>
+      <div class="col s3 btn">1</div>
+      <div class="col s3 btn">1</div>
+    </div>
   </body>
 </html>

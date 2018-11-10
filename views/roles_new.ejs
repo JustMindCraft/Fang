@@ -1,8 +1,8 @@
 <% include ./layouts/frontend_header %>
 
 
-<div class="container">
-        <div class="row">
+<div class="container" style="position:relative; top:120px;">
+        <div class="row center">
             <div class="col s12 flow-text">新建角色</div>
             <form id="reg_form" action="/roles/create" method="POST" class="col s12 flow-text">
                 <div class="row">
@@ -20,38 +20,283 @@
                                 </div>
                                 <div class="input-field col s3">
                                         <label>
-                                                <input type="checkbox" value="/users"　name="user_query" />
+                                                <input type="checkbox" value="read"　name="users" />
                                                 <span>查看</span>
                                         </label>
                                 </div>
                                 <div class="input-field col s3">
                                         <label>
-                                                <input type="checkbox" value="/users/new" name="user_create"/>
+                                                <input type="checkbox" value="create" name="users"/>
                                                 <span>新增</span>
                                         </label>
                                 </div>
                                 <div class="input-field col s3">
                                         <label>
-                                                <input type="checkbox" name="user_delete" />
+                                                <input type="checkbox" value="delete"  name="users" />
                                                 <span>删除</span>
                                         </label>
                                 </div>
                                 <div class="input-field col s3">
                                         <label>
-                                                <input type="checkbox" name="user_update" />
+                                                <input type="checkbox" value="update" name="users" />
                                                 <span>修改</span>
                                         </label>
                                 </div>
                         </div>
                         <div class="row">
-                               
+                                <div class="input-field col s12">
+                                    <h6>角色管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="roles" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="roles"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="delete" name="roles" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="update" name="roles" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
                         </div>
-                        
                         <div class="row">
-                           
+                                <div class="input-field col s12">
+                                    <h6>文章管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="posts" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="posts"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="delete" name="posts" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="update" name="posts" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
                         </div>
                         <div class="row">
-                                <div class="col s6"><Button type="submit" class="waves-effect waves-light btn red darken-1">新建角色</Button></div>
+                                <div class="input-field col s12">
+                                    <h6>商品管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="products" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="products"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="delete" name="products" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="products" value="update" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>订单管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="orders" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="orders"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="delete" name="orders" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="orders" value="update" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>预约管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="appointments" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="appointments"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="delete" name="appointments" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="orders" value="appointments" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>系统管理</h6>
+                                </div>
+                                <div class="input-field col s6">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="system" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+         
+                                <div class="input-field col s6">
+                                        <label>
+                                                <input type="checkbox" name="system" value="update" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>应用管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="apps" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="apps"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="apps" value="delete" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="update" value="apps" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>文件管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="files" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="files"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="files" value="delete" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="files"  value="update"/>
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                        <div class="row">
+                                <div class="input-field col s12">
+                                    <h6>视频管理</h6>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="read"　name="videos" />
+                                                <span>查看</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" value="create" name="videos"/>
+                                                <span>新增</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="videos" value="delete" />
+                                                <span>删除</span>
+                                        </label>
+                                </div>
+                                <div class="input-field col s3">
+                                        <label>
+                                                <input type="checkbox" name="videos" value="update" />
+                                                <span>修改</span>
+                                        </label>
+                                </div>
+                        </div>
+                       <br><br>
+                        <div class="row">
+                                <div class="col input-field s12"><Button type="submit" class="waves-effect waves-light btn red darken-1 full-width"
+                                         style="width: 80%;">新建角色</Button></div>
                         </div>
                        
                 </div>
@@ -62,6 +307,6 @@
         </div>
 
 </div>
-
+<br><br> <br><br> <br><br> <br><br>
 
 <% include ./layouts/frontend_footer %>

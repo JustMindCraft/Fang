@@ -12,7 +12,7 @@ import controllers from '../controllers';
 import loadModels from '../models';
 import config from '../config/index';
 import Role from '../MongoModels/Role';
-import menu from '../config/menu';
+import allMenus from '../config/all_menus';
 import ss from '../secrects.json';
 
 const Inert = require('inert');
@@ -96,7 +96,6 @@ const init = async () => {
     await server.register(Inert);
 
     await server.register(require('hapi-auth-jwt2'));
-    await server.register(require('hapi-auth-basic'));
     await server.register(require('hapi-auth-cookie'));
     
     await server.start();
@@ -109,7 +108,6 @@ const init = async () => {
         algorithms: [ 'HS256' ]    // specify your secure algorithm
       } // pick a strong algorithm
     });
-    server.auth.strategy('simple', 'basic', { validate: validateSimple });
 
     const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
     server.app.cache = cache;
@@ -120,43 +118,92 @@ const init = async () => {
         redirectTo: '/login',
         isSecure: false,
         validateFunc: async (request, session) => {
-            console.log("on cookie valid", request.auth);
-            console.log({session});
-            
+            console.log("in the valid", request.path);
+            console.log("in the valid", request.method);
+            try {
+                let method = request.method;
+                let path = request.path;
 
-            const cached = await cache.get(session.uuid);
-
-            console.log(cached);
-            
-            if(!cached){
-                return {
-                    valid: false,
-                }
-            }
-            const token = JWT.sign(cached.user, secret);
-            let roles = ['loginedUser'];
-
-            for (let index = 0; index < cached.user.roles.length; index++) {
-                const role = cached.user.roles[index];
-                let roleObj = await Role.findById(role);
-                roles.push(roleObj.name);
+                const cached = await cache.get(session.uuid);
                 
-            }
-
-            console.log({roles});
-            
-
-            let out =  {
-                valid: true,
-                credentials:{
-                    token,
-                    scope: roles,
-                    role: cached.user.roles,
+                if(!cached){
+                    return {
+                        valid: false,
+                    }
                 }
-            };
-            console.log("roles", out.credentials.scope);
+                const token = JWT.sign(cached.user, secret);
+                let roles = ['loginedUser'];
+                let access = false;
+                let menu = [];//准备现实的权限菜单
+                   
+                    
+
+            
+                for (let index = 0; index < cached.user.roles.length; index++) {
+                    const role = cached.user.roles[index];
+                    let roleObj = await Role.findById(role);
+                    roles.push(roleObj.name);
+                    if(roleObj.isSuper){
+                        //如果是超级管理员一律放行
+                        roles.push(token);
+                        access = true;
+                        let menuObjs =  Object.getOwnPropertyNames(allMenus);
+                        for (let j = 0; j < menuObjs.length; j++) {
+                            allMenus[menuObjs[j]].path = menuObjs[j];
+                            menu.push(allMenus[menuObjs[j]]);
+                        }
+                        continue;
+                    }else{
+                        let myMenuItem = allMenus['/my'];
+                        myMenuItem.path = '/my';
+                        menu.push(allMenus['/my']);      
+                       
+                    }
+                    if(!roleObj.allowPaths){
+                        continue;
+                    }
+                    let allowPaths = Object.getOwnPropertyNames(roleObj.allowPaths);
+                    for (let k = 0; k < allowPaths.length; k++) {
+                        if(roleObj.allowPaths[allowPaths[key]]){
+                            roleObj.allowPaths[allowPaths[key]].path = allowPaths[key];
+                            menu.push(roleObj.allowPaths[allowPaths[key]]);
+                            access = true;
+                        
+                        }
+                    }
+                    if(roleObj.allowPaths[method+"|^"+path]){
+                        roles.push(token);
+                        access = true;
+                    
+                    }
+                    
+                }
+                if(cached.user.roles.length === 0){
+                        let myMenuItem = allMenus['/my'];
+                        myMenuItem.path = '/my';
+                        menu.push(allMenus['/my']);      
+                        
+                }
+            
+                
+                let out =  {
+                    valid: true,
+                    credentials:{
+                        token: access? token: null,
+                        userId: cached.user._id,
+                        scope: access? roles: ['loginedUser'],
+                        menu,
+                    }
+                };
+                console.log("roles", out.credentials.scope);
             
             return out;
+            } catch (error) {
+                console.log(error);
+                return error;
+                
+            }
+            
         }
     });
   
@@ -223,62 +270,49 @@ const init = async () => {
             }
         }
     });
-    server.route({  
-        method: [ 'GET', 'POST' ],
-        path: '/{any*}', 
-        options: {
-            auth: {
-                strategy: 'session',
-                scope: ["loginedUser"],
-                mode: 'try'
-            }
-        },
-        handler: (request, h) => {
-          const accept = request.headers.accept
-            console.log(request.params);
-            let scope = [];
 
-            if (request.auth.credentials) {
-                 scope = request.auth.credentials.scope;
-            }
-
-            let render_menu = menu(scope); 
-            
-            
-          if (accept && accept.match(/json/)) {
-            return Boom.notFound('Fuckity fuck, this resource isn’t available.')
-          }
+    registerControllers(server, controllers);
       
-          return h.view('404', {
-              title: "正觉工场|404|NOT FOUND|页面未找到",
-              menu: render_menu,
-          })
-        }
-      })
-
-      registerControllers(server, controllers);
-      server.route(
-        {
-            method: 'GET', path: '/restricted',
-            handler: function(request, h) {
-                console.log(request.auth);
-                
-              const response = h.response({text: 'You used a Token!'});
-              response.header("Authorization", request.headers.authorization);
-              return response;
-            },
-            options: {
-                auth: {
-                    strategy: 'jwt',
-                    scope: ['+admin', "!nobody", "+user"]
-                }
-            }
-          }
-    )
     server.events.on('request', (request, h) => {
         // console.log(request.path, request.auth);
     });
     console.log(`Server running at: ${server.info.uri}`);
+    server.ext('onPreResponse', (request, h) => {
+
+        const response = request.response;
+       
+
+        if (response.isBoom &&
+            response.output.statusCode === 403) {
+               
+                return h.view('403', {
+                    title: "正觉工场|403|没有权限",
+                    menu: request.auth.credentials? request.auth.credentials.menu: [],
+                })
+            
+        }
+        if (response.isBoom &&
+            response.output.statusCode === 404) {
+                
+                return h.view('404', {
+                    title: "正觉工场|404|NOT FOUND|页面未找到",
+                    menu: request.auth.credentials? request.auth.credentials.menu: [],
+                })
+            
+        }
+        if (response.isBoom &&
+            response.output.statusCode === 500) {
+                
+                return h.view('500', {
+                    title: "正觉工场|500|服务器挂了",
+                    menu: request.auth.credentials? request.auth.credentials.menu: [],
+                })
+            
+        }
+
+    
+        return h.continue;
+    });
 };
 
 process.on('unhandledRejection', (err) => {

@@ -37,16 +37,34 @@
    <!-- Compiled and minified JavaScript -->
    <script src="https://zhengjue.lododor.com/gun/gun.min.js"></script>
     <script src="https://zhengjue.lododor.com/gun/sea.js"></script>
+    <style>
+      @media only screen and (max-width: 360px) {
+      .brand-logo img{
+        position: relative;
+        top: 1px;
+        left: 5px;
+        width: 44px;
+        height: 52px;
+      }
+    }
+    @media only screen and (min-width: 361px) {
+      .brand-logo img{
+        position: relative;
+        top: 3px;
+        left: 5px;
+        width: 44px;
+        height: 52px;
+      }
+    }
+   
+    
+    </style>
 </head>
 <body>
   <nav class="nav-header" style="background-color:rgba(0, 0, 0, 0.23921568627450981); color: white;" role="navigation">
     <div class="nav-wrapper container">
       <a style="display:flex; font-size:21px;" id="logo-container" href="/" class="brand-logo">
-        <img style="position: relative;
-        top: -18px;
-        left: 10px;
-        width: 88px;
-        height: 104px;" src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541724181/zhengjue/icon_logos/6bb78edb-3a5f-4137-a380-0b66c79ccef7.png" alt="">
+        <img src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541724181/zhengjue/icon_logos/6bb78edb-3a5f-4137-a380-0b66c79ccef7.png" alt="">
         正觉工场  </a>
         
       <ul class="right hide-on-med-and-down">
@@ -110,7 +128,8 @@
               <ul class="collapsible">
                   <li>
                     <div class="collapsible-header">管理面板</div>
-                    <div class="collapsible-body">
+                    <div class="collapsible-body" style="z-index: 9999;
+                    background: gray;">
                             <% for(var l=0; l < menu.length; l++){ %>
                          
                               <% if(menu[l].isFold === true) { %>
@@ -135,7 +154,8 @@
     document.addEventListener('DOMContentLoaded', function() {
       var dropElems = document.querySelectorAll('.dropdown-trigger');
       var instances = M.Dropdown.init(dropElems, {});
-      var colElems = document.querySelectorAll('.collapsible');
-      instances = M.Collapsible.init(colElems, {});
+     
     });
+   
   </script>
+

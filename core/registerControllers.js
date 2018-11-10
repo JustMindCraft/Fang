@@ -21,7 +21,9 @@ export function formatRoutes(controllers){
 }
 
 export function grantRouteByRole(role, controller){
-    controller.option.auth.scope.push("+"+role.name);
+    if(!role.isSuper && role.allowRoutes[controller.method+":"+controller.path]){
+        controller.option.auth.scope.push("+"+role.name);
+    }
     return controller;
 }
 
@@ -40,6 +42,18 @@ export function grantRoutesByRoles(roles, controllers){
     })
     return ctrs;
 }
+export function comControllers(controller){
+    let routesRegs = [];
+    
+    
+
+    controllers.forEach(ctr => {
+
+        routesRegs = routesRegs.concat(ctr);
+    })
+    return routesRegs;
+
+};
 
 export default function registerControllers(server, controllers){
 

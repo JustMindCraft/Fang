@@ -15,16 +15,6 @@ export default
         config: {auth: false},
     
         handler: async (request, h) => {
-
-            console.log(request.auth);
-            
-            let scope = [];
-            
-            if (request.auth.credentials) {
-                 scope = request.auth.credentials.scope;
-            }
-
-            let render_menu = menu(scope);
         
             try {
                 
@@ -32,7 +22,7 @@ export default
                         title: '正觉工场 | 创建正觉账号 ',
                         msg: request.query.msg,
                         reg_session: request.query.reg_session,
-                        menu: render_menu
+                        menu: request.auth.credentials? request.auth.credentials.menu : []
                     });
              } catch (error) {
                 console.error(error);
@@ -136,6 +126,7 @@ export default
                 var hash = bcrypt.hashSync(user.password, salt);
 
                 user.password = hash;
+                user.password_repeat = null;
                 await user.save();
                 
                 return await putLoginSession(user, 66666);

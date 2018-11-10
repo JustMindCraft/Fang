@@ -20,7 +20,6 @@ export default
         },
     
         handler: async (request, h) => {
-            console.log("login page auth", request.auth);
             if(request.auth.isAuthenticated){
                 return h.redirect('/my');
             }
@@ -44,6 +43,8 @@ export default
         method: 'GET',
         path: '/logout', config: {  auth: false },
         handler: async (request, h) => {
+            console.log(request.state);
+            
             request.server.app.cache.drop(request.state['sid'].uuid);
             request.cookieAuth.clear();
             return h.redirect('/');
@@ -96,7 +97,7 @@ export default
                                 await request.server.app.cache.set(uuid, { user }, 0);
                                 request.cookieAuth.set({ uuid });
                                 
-                                rel(h.redirect(`/my?login=success`).state('data', { uuid }))
+                                rel(h.redirect(`/my?login=success`).state('sid', { uuid }))
                                 
                             }else{
                                 rej("gun error");

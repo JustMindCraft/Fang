@@ -1,10 +1,89 @@
 <% include ./layouts/frontend_header %>
-<div class="container login-container">
-        <div class="row">
-            <div class="col s12 flow-text">个人中心</div>
-            
-               
-               
+   
+<div class="container" style="margin-top:100px;margin-bottom:150px;">
+       
+        <ul class="collection">
+                <li class="collection-item avatar">
+                  <img src="https://res.cloudinary.com/da7efhqvt/image/upload/v1541790703/zhengjue/imgs/default_head.jpg" alt="" class="circle">
+                  <span class="title">昵称</span>
+                  <p><%= user.username %> <br>
+                     签名未设置。
+                  </p>
+                  <div class="secondary-content">
+                        <a href="#" >修改</a>&nbsp;|&nbsp;<a href="#" >查看</a>&nbsp;|&nbsp;<a href="#" >主页</a>
+                  </div>
+                  
+                </li>
+                <li class="collection-item avatar">
+                  <i class="material-icons circle">folder</i>
+                  <span class="title">钱包</span>
+                  <p>余额：&nbsp; 
+                     ￥12984:00
+                  </p>
+                  <div class="secondary-content">
+                        <a href="#" >充值</a>&nbsp;|&nbsp;<a href="#" >查看明细</a>
+                  </div>
+                </li>
+                <li class="collection-item avatar">
+                  <i class="material-icons circle green">insert_chart</i>
+                  <span class="title">我的订单</span>
+                  <span class="badge red white-text">4未付款</span>
+                </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle green">insert_chart</i>
+                        <span class="title">我的预约</span>
+                        <span class="badge red white-text">4未核准</span>
+                      </li>
+                <li class="collection-item avatar">
+                  <i class="material-icons circle yellow">star</i>
+                  <span class="title">我的收藏</span>
+                  <div class="secondary-content">
+                        <a href="#" >查看</a>
+                  </div>
+                  
+                </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle yellow">star</i>
+                        <span class="title">我的卡、券、道具</span>
+                        <div class="secondary-content">
+                              <a href="#" >查看</a>
+                        </div>
+                        
+                      </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle yellow">star</i>
+                        <span class="title">我的推荐</span>
+                        <div>
+                                <a href="#" >推荐码</a>&nbsp;|&nbsp;<a href="#" >推荐图片</a>&nbsp;|&nbsp;<a href="#" >推荐代码</a>
+                                &nbsp;|&nbsp;<a href="#" >添加</a>
+                                &nbsp;|&nbsp;<a href="#" >管理</a>
+                          </div>
+                        
+                </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle yellow">star</i>
+                        <span class="title">我的店铺</span>
+                        <div class="secondary-content">
+                                <a href="#" >主页</a>&nbsp;|&nbsp;<a href="#" >上货</a>&nbsp;|&nbsp;<a href="#" >商品管理</a>
+                          </div>
+                </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle yellow">star</i>
+                        <span class="title">我的文件</span>
+                        <div class="secondary-content">
+                                <a href="#" >查看</a>
+                          </div>
+                </li>
+                <li class="collection-item avatar">
+                        <i class="material-icons circle yellow">star</i>
+                        <span class="title">我的博客</span>
+                        <div class="secondary-content">
+                                <a href="#" >查看</a>&nbsp;|&nbsp;<a href="#" >写</a>
+                          </div>
+                </li>
+        </ul>
+        <div class="row center">
+                <button type="submit" class="btn wave-effect large red" style="width: 80%">退出当前账号</button>
         </div>
 
 </div>

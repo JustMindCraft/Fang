@@ -49,7 +49,7 @@ rl.question("请输入您超管的邮箱：", async function(answer1){
                     console.log(superUser);
                     try {
                         let user =  new User(superUser);
-                        let role =  new Role({name: "superAdmin"})
+                        let role =  new Role({name: "superAdmin", isSuper: true,})
                        
                         let role_count = await Role.find({name: "superAdmin"}).countDocuments();
                         if(role_count!==0){

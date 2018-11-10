@@ -1,0 +1,52 @@
+<% include ./layouts/frontend_header %>
+
+
+<div class="container" style="position:relative; top:120px;">
+            <form id="reg_form" action="/users/update/<%=user._id%>" method="POST" class="col s12 flow-text">
+                <ul class="collection with-header">
+                        <li class="collection-header"><h6>授权用户</h6></li>
+                        <li class="collection-item"><div>用户名: <div class="secondary-content"><%= user.username %> </div></div></li>
+                        <li class="collection-item"><div>邮箱 <div class="secondary-content"><%= user.email %> </div></div></li>
+                        <li class="collection-item"><div>已授权角色：</div></li>
+                        <li class="collection-item"><div>
+                                <div class="chip" role_id="">
+                                        角色名1
+                                    <i class="close material-icons">close</i>
+                                </div>
+                                <div class="chip">
+                                        角色名2
+                                    <i class="close material-icons">close</i>
+                                </div>
+                                <div class="chip">
+                                        角色名3
+                                    <i class="close material-icons">close</i>
+                                </div>
+                        </div></li>
+                        <input type="hidden" value="role_id" name="role_ids" id="role|^">
+                </ul>
+                <div class="row center">
+                        <button type="submit" class="btn wave-effect large red" style="width: 80%">提交授权</button>
+                    </div>
+            </form>
+                <ul class="collection with-header">
+                        <li class="collection-header"><h5>选择角色</h5>
+                                <input id="search" placeholder="搜索"><br/>
+                              </li>
+                        <li class="collection-item active"><div>角色名称1</div></li>
+                        <li class="collection-item "><div>角色名称1</div></li>
+
+                </ul>
+                <div class="row center">
+                        <button type="button" class="btn wave-effect large red" style="width: 80%">提交授权</button>
+                </div>
+               
+              
+               
+          
+               
+               
+
+</div>
+<br><br> <br><br> <br><br> <br><br>
+
+<% include ./layouts/frontend_footer %>
