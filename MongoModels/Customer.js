@@ -12,6 +12,8 @@ const CustomerSchema = new mongoose.Schema({
     projectTypeInterested: String,
     email: String,
     note: String,
+    createdAt: { type: Date, default: Date.now },
+
   });
 
   const Customer = mongoose.model('Customer', CustomerSchema);

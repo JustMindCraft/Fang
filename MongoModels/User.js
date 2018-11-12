@@ -32,7 +32,8 @@ const UserSchema = new mongoose.Schema({
     password: String,
     posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     roles: [{ type: Schema.Types.ObjectId, ref: 'Role' }],
-    profile: { type: Schema.Types.ObjectId, ref: 'Profile' }
+    profile: { type: Schema.Types.ObjectId, ref: 'Profile' },
+    createdAt: { type: Date, default: Date.now },
   });
 
 
