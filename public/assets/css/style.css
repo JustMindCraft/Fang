@@ -21,7 +21,7 @@
   /* Support for all WebKit browsers. */
   -webkit-font-smoothing: antialiased;
   /* Support for Safari and Chrome. */
-  text-rendering: optimizeLegibility;
+  text-rendering: optimizeLegibility !important;
 
   /* Support for Firefox. */
   -moz-osx-font-smoothing: grayscale;
