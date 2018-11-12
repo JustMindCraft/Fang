@@ -27,13 +27,47 @@ export default [
     },
     {
         method: 'GET',
+        path: '/contacts',
+       
+        handler: async (request, h) => {
+
+            
+           
+            try {
+                let customers = await Customer.find({});
+                // console.log(customers);
+                
+                return h.view('contacts', {
+                    title: '正觉工场 | 客户管理',
+                    menu: request.auth.credentials? request.auth.credentials.menu : [],
+                    customers,
+                });
+                
+            } catch (error) {
+                console.error(error);
+                
+            }
+            
+            
+            
+            
+        },
+        options: {
+            auth: {
+                strategy: 'session',
+                scope:["{credentials.token}"],
+            },
+        },
+    },
+    {
+        method: 'GET',
         path: '/contacts/create/success',
        
         handler: async (request, h) => {
            
             try {
                 return h.view('contact_create_success', {
-                    title: '正觉工场 | 意向提交成功',
+                    title: '正觉工场 | 客户联系请求',
                     menu: []
                 });
                 
@@ -55,12 +89,12 @@ export default [
         path: '/contacts/create',
        
         handler: async (request, h) => {
-
-            // console.log(request.payload);
-            
            
             try {
-                let customer = new Customer(request.payload);
+                let customer = new Customer({
+                    ...request.payload,
+                    status: "untouched"
+                });
                 await customer.save();
 
                 return h.redirect('/contacts/create/success')

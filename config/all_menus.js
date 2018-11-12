@@ -38,5 +38,9 @@ export default  {
     '/apps': {
         name: "应用管理",
         isFold: true,
+    },
+    '/contacts': {
+        name: "客户管理",
+        isFold: true,
     }
 }

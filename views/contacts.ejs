@@ -1,0 +1,58 @@
+<% include ./layouts/frontend_header %>
+
+<div class="container">
+        <div class="row center">
+                <h3 class="header col s12 light">客户意向提交</h4>
+        </div>
+        <div class="row center">
+                <div class="row">
+                        <div class="col s3 ">
+                            <a href="/contacts/new" class="btn">新建</a>
+                        </div>
+                        </div>
+                        <div class="row">
+                                <table class="responsive-table">
+                                        <thead>
+                                        <tr>
+                                            <th>客户称呼</th>
+                                            <th>电话</th>
+                                            <th>邮箱</th>
+                                            <th>感兴趣的项目</th>
+                                            <th>其他话说</th>
+                                            <th>状态</th>
+                                        </tr>
+                                        </thead>
+                                
+                                        <tbody>
+                                            <% for(var i=0; i<customers.length; i++){ %>
+                                            <tr>
+                                                <td><%=customers[i].name %></td>
+                                                <td><%=customers[i].mobile %></td>
+                                                <td><%=customers[i].email %></td>
+                                                <td><%=customers[i].projectTypeInterested %></td>
+                                                <td><%=customers[i].note %></td>
+                                                <td>
+                                                    <div class="switch">
+                                                        <label>
+                                                          未联系
+                                                          <input type="checkbox">
+                                                          <span class="lever"></span>
+                                                          已联系
+                                                        </label>
+                                                      </div>
+                                                </td>
+
+                                            </tr>
+                                            <% } %>
+                                          
+                                        
+                                        </tbody>
+                                    </table>
+                        </div>
+        </div>
+        <div class="row center">
+        </div>
+</div>
+
+
+<% include ./layouts/frontend_footer %>

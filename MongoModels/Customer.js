@@ -12,7 +12,9 @@ const CustomerSchema = new mongoose.Schema({
     projectTypeInterested: String,
     email: String,
     note: String,
+    status: { type: String, default: "untouched" },
     createdAt: { type: Date, default: Date.now },
+    report: String,
 
   });
 
