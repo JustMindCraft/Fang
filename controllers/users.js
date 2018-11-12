@@ -5,13 +5,13 @@ export default [
     {
         method: 'GET',
         path: '/users',
-        // options: {
-        //     auth: {
-        //         strategy: 'session',
-        //         scope:["{credentials.token}"],
-        //     }
-        // },
-        config: {auth: false},
+        options: {
+            auth: {
+                strategy: 'session',
+                scope:["{credentials.token}"],
+            }
+        },
+        // config: {auth: false},
 
         handler: async (request, h) => {
             let msg = request.query.msg? request.query.msg: "";
@@ -55,9 +55,6 @@ export default [
                 }
                 
                 let users = await getUserWithRoleName();
-
-                console.log(users);
-                
                 
                 return h.view('users', {
                     title: '正觉工场 | 用户管理 ',
@@ -79,17 +76,36 @@ export default [
     {
         method: 'GET',
         path: '/users/edit/{id}',
-        // options: {
-        //     auth: {
-        //         strategy: 'session',
-        //         scope:["{credentials.token}"],
-        //     }
-        // },
-        config: {auth: false},
+        options: {
+            auth: {
+                strategy: 'session',
+                scope:["{credentials.token}"],
+            }
+        },
+        // config: {auth: false},
         handler: async (request, h) => {
             let msg = request.query.msg? request.query.msg: "";
 
-            let user = await User.findById(request.params.id)
+            let userId = request.params.id;
+
+            if(!userId){
+                return h.redirect("/users?msg=userId_missing");
+            }
+
+            let getUserWithRoleName = () => {
+                return new Promise((resolve, reject)=>{
+                    User.findById(userId).populate({path: 'roles', select: 'name isSuper' }).exec(function(err, rlt){
+                        if(!err){
+                            resolve(rlt);
+                        }else{
+                            reject(err);
+                        }
+                        
+                    })
+                })
+            }
+
+            let user = await getUserWithRoleName();
 
             let user_roles = user.roles;
 
@@ -115,10 +131,43 @@ export default [
                 scope:["{credentials.token}"],
             }
         },
-        handler: async (request, h) => {
-            let msg = request.query.msg? request.query.msg: "";
+        // config: {auth: false},
 
-            return h.redirect("/update/"+request.params.id+"msg="+msg);
+        handler: async (request, h) => {
+            
+            if(!request.payload.role_ids){
+                return h.redirect("/users?msg=no_change");
+            }else{
+                let roles = request.payload.role_ids;
+                
+                if(!request.params.id){
+                    return h.redirect("/users?msg=missing_user_id");
+                }else{
+                    try {
+                        let user = await User.findById(request.params.id);
+                        
+
+                        if (Array.isArray(roles)) {
+                            
+                            user.roles = roles;
+                        }else{
+                            user.roles = [roles];
+                        }
+                        await user.save();
+                        
+                        return h.redirect("/users?msg=success");
+
+                    } catch (error) {
+                        console.log(error);
+                        
+                        return h.redirect("/users/edit/"+request.params.id+"?msg="+error.toString());
+                        
+                    }
+                }
+                
+            }
+            
+
         }
     }
 ]

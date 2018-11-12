@@ -39,13 +39,10 @@ const people = { // our "users database"
     }
 };
 const token = JWT.sign(people[1], secret); // synchronous
-console.log(token);
 
 // bring your own validation function
 const validate = async function (decoded, request, h) {
-    console.log(request.auth);
     
-    console.log(people[decoded.id].scope);
     
     // do your checks to see if the person is valid
     if (!people[decoded.id]) {
@@ -67,7 +64,6 @@ const users = {
 const validateSimple = async (request)=> {
 
     
-    console.log('uuid', request.state.uuid);
     
     return { isValid: true, credentials: {} };
 };
@@ -118,8 +114,6 @@ const init = async () => {
         redirectTo: '/login',
         isSecure: false,
         validateFunc: async (request, session) => {
-            console.log("in the valid", request.path);
-            console.log("in the valid", request.method);
             try {
                 let method = request.method;
                 let path = request.path;
@@ -163,10 +157,13 @@ const init = async () => {
                         continue;
                     }
                     let allowPaths = Object.getOwnPropertyNames(roleObj.allowPaths);
+                    
                     for (let k = 0; k < allowPaths.length; k++) {
-                        if(roleObj.allowPaths[allowPaths[key]]){
-                            roleObj.allowPaths[allowPaths[key]].path = allowPaths[key];
-                            menu.push(roleObj.allowPaths[allowPaths[key]]);
+                        let str = allowPaths[k].split('|^');
+                        
+                        if(roleObj.allowPaths[allowPaths[k]] && allMenus[str[1]]){
+                            allMenus[str[1]].path = allowPaths[k];
+                            menu.push(allMenus[str[1]]);
                             access = true;
                         
                         }
@@ -195,7 +192,6 @@ const init = async () => {
                         menu,
                     }
                 };
-                console.log("roles", out.credentials.scope);
             
             return out;
             } catch (error) {
@@ -302,6 +298,7 @@ const init = async () => {
         }
         if (response.isBoom &&
             response.output.statusCode === 500) {
+                console.log(response);
                 
                 return h.view('500', {
                     title: "正觉工场|500|服务器挂了",

@@ -40,7 +40,6 @@ const UserSchema = new mongoose.Schema({
   const User = mongoose.model('User', UserSchema);
 
   export async function auth(userparams, password){
-    console.log(userparams, password);
     
     let user = await User.findOne({email: userparams});
     

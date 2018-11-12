@@ -7,7 +7,6 @@ export default async function createGunRoots(model){
     model.relations = model.setRelations();
     let putPromise = new Promise((res,rej)=>{
         gun.get('root2').put(usersObj, ack => {
-            console.log(`创建${model.collection}成功`, ack);
             res(ack);
             
         })

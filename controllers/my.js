@@ -1,8 +1,4 @@
-import {Gun} from '../core/gun';
-import menu from '../config/menu';
 import User from '../MongoModels/User';
-
-require('gun/sea');
 
 export default [
     {
@@ -10,7 +6,6 @@ export default [
         path: '/my',
        
         handler: async (request, h) => {
-            console.log("my 123", request.auth.credentials);
            
 
             let user = await  User.findById(request.auth.credentials.userId);

@@ -1,5 +1,4 @@
 
-import menu from '../config/menu';
 
 export default [
     {
@@ -12,16 +11,6 @@ export default [
             }
         },
         handler: async (request, h) => {
-            console.log("home", request.auth);
-            
-            let scope = [];
-
-            if (request.auth.credentials) {
-                 scope = request.auth.credentials.scope;
-            }
-
-            let render_menu = menu(scope);
-            console.log({render_menu});
 
             try {
                 return h.view('index', {

@@ -1,4 +1,3 @@
-import menu from '../config/menu';
 import Role from '../MongoModels/Role';
 
 export default [
@@ -12,24 +11,12 @@ export default [
             }
         },
         handler: async (request, h) => {
-            console.log(request.auth);
-            
-
-
-           
-            let scope = [];
-            
-            if (request.auth.credentials) {
-                 scope = request.auth.credentials.scope;
-            }
-
-            let render_menu = menu(scope);
             
             try {
                 return h.view('roles', {
                     title: '正觉工场 | 角色管理 ',
                     msg: request.query.msg,
-                    menu: render_menu
+                    menu: request.auth.credentials.menu
                 });
                 
             } catch (error) {
@@ -84,13 +71,12 @@ export default [
             }
         },
         handler: async (request, h) => {
-            // console.log("roles/create", request.payload);
+            
             try {
                 let params = request.payload;
                 let allowPaths ={};
                 let roleName = request.payload.role_name;
                 Object.getOwnPropertyNames(params).forEach(key => {
-                    console.log(key, params[key]);
                     if(key === "role_name"){
                         return 0;
                     }

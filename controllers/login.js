@@ -43,11 +43,10 @@ export default
         method: 'GET',
         path: '/logout', config: {  auth: false },
         handler: async (request, h) => {
-            console.log(request.state);
             
             request.server.app.cache.drop(request.state['sid'].uuid);
             request.cookieAuth.clear();
-            return h.redirect('/');
+            return h.redirect('/login?msg=logout_success');
         }
     },
     {

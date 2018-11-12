@@ -17,6 +17,7 @@
                                 <tr>
                                     <th>用户名</th>
                                     <th>邮箱</th>
+                                    <th>角色</th>
                                     <th>删除</th>
                                     <th>授权</th>
                                 </tr>
@@ -28,6 +29,16 @@
                                         <tr>
                                             <td><%= users[i].username %></td>
                                             <td><%= users[i].email %></td>
+                                            <td>
+                                                <% if(users[i].roles.length === 0){ %>
+                                                    暂时没有授权角色
+                                                <% }else{ %>
+                                                    <% for(var k=0; k<users[i].roles.length;k++){ %>
+                                                        <%=users[i].roles[k].name %>
+                                                    <% } %>
+                                                <% } %>
+                                                    
+                                            </td>
                                            
                                             <td>
                                                     <a href="/users/delete/<%=users[i]._id%>" class="btn wave-effect red">删除</a>

@@ -79,9 +79,10 @@ p {
 
 footer.page-footer {
   margin: 0;
-  background: url(https://res.cloudinary.com/da7efhqvt/image/upload/v1541721739/zhengjue/imgs/bg-footer.jpg) no-repeat;
+  background: url(https://res.cloudinary.com/da7efhqvt/image/upload/v1541865513/zhengjue/imgs/%E5%BA%95%E5%9B%BE2.png) no-repeat;
   color: black;
-  background-size: 100% 98%;
+  height: 500px;
+  background-size: 100% 100%;
 }
 
 .footer-copyright{

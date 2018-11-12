@@ -1,5 +1,4 @@
 import User, { UserValidSchema } from '../MongoModels/User';
-import menu from '../config/menu';
 import Joi from 'joi';
 
 import {gun, Gun} from '../core/gun'
@@ -41,13 +40,7 @@ export default
         handler: async (request, h) => {
 
             let userParams = request.payload;
-            let password = request.payload.password;
-
-            console.log(password);
             //开始加密用户密码
-            
-
-            
             
             const result = Joi.validate(request.payload, UserValidSchema);
             let user = null;
@@ -66,7 +59,6 @@ export default
     
                 return new Promise((rel, rej)=>{
                     gun.get("zhengjue").get("reg_sessions").get(uuid).put({...userParams}, ack => {
-                        console.log(userParams);
                         
                         if (ack.ok === 1) {
                             
@@ -83,7 +75,6 @@ export default
             }
 
             let putLoginSession = (user, expireTime) => {
-                console.log("需要干的user", user._id);
                 
                 return new Promise((rel, rej)=>{
                     let uuid = new require("uuid/v4")();
