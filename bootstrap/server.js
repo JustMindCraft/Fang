@@ -5,7 +5,6 @@
 */
 
 import server from '../core/server';
-import Boom from 'boom'
 import  '../controllers';
 import registerControllers from '../core/registerControllers';
 import controllers from '../controllers';
@@ -14,6 +13,7 @@ import config from '../config/index';
 import Role from '../MongoModels/Role';
 import allMenus from '../config/all_menus';
 import ss from '../secrects.json';
+import apis from '../api';
 
 const Inert = require('inert');
 const Gun   = require('gun');
@@ -268,6 +268,7 @@ const init = async () => {
     });
 
     registerControllers(server, controllers);
+    registerControllers(server, apis);
       
     server.events.on('request', (request, h) => {
         // console.log(request.path, request.auth);
@@ -296,16 +297,16 @@ const init = async () => {
                 })
             
         }
-        if (response.isBoom &&
-            response.output.statusCode === 500) {
-                console.log(response);
+        // if (response.isBoom &&
+        //     response.output.statusCode === 500) {
+        //         console.log(response);
                 
-                return h.view('500', {
-                    title: "正觉工场|500|服务器挂了",
-                    menu: request.auth.credentials? request.auth.credentials.menu: [],
-                })
+        //         return h.view('500', {
+        //             title: "正觉工场|500|服务器挂了",
+        //             menu: request.auth.credentials? request.auth.credentials.menu: [],
+        //         })
             
-        }
+        // }
 
     
         return h.continue;

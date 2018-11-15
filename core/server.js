@@ -9,7 +9,7 @@ import config from '../config';
 
 const serverConfig = config.server;
 
-const server = new Hapi.Server(serverConfig);
+const server = new Hapi.Server(serverConfig, { cors: true });
 
 export default server;
 

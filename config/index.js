@@ -15,7 +15,8 @@ export default {
 		routes: {
 			files: {
 				relativeTo: Path.join(__dirname, '../public/assets')
-			}
+			},
+			"cors": true
 		}
 	},
 	db: {

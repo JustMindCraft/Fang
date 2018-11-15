@@ -1,6 +1,4 @@
-import { auth } from '../MongoModels/User';
-
-import {gun, Gun} from '../core/gun'
+import { auth } from '../../MongoModels/User';
 
 export default 
 [
@@ -15,6 +13,7 @@ export default
     
         handler: async (request, h) => {
            console.log(request.auth);
+           return h.response({token: "success"});
            
         
         },
