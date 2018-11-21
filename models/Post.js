@@ -1,38 +1,11 @@
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
+const PostSchema = new mongoose.Schema({
+    title: String,
+    body: String,
+    author: [{ type: Schema.Types.ObjectId, ref: 'User' }]
+  });
 
-import AppModel from '../core/model';
+  const Post = mongoose.model('Post', PostSchema);
 
-
-import Tag from './Tag.js';
-
-import User from './User.js';
-
-import Joi from 'joi';
-
-export default class Post extends AppModel {
-    
-    static setFeilds(){
-        return {
-            title: Joi.string().max(50).required(),
-        
-            body: Joi.string().min(20).required(),
-        
-        }
-    }
-
-    static setUniqueFeild(){
-        return {
-            title: 'unique',
-        }
-    }
-
-    static setRelations(){
-        return {
-            hasMany: Tag,
-        
-            belongsTo: [User, Tag],
-
-        }
-    }
-    
-}
-
+  export default  Post;
