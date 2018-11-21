@@ -1,4 +1,4 @@
-import { auth } from '../../MongoModels/User';
+import { auth } from '../../models/User';
 
 export default 
 [

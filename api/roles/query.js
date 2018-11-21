@@ -1,4 +1,4 @@
-import Role from '../../MongoModels/Role';
+import Role from '../../models/Role';
 
 export default 
 [

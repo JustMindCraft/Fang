@@ -5,18 +5,12 @@
 */
 
 import server from '../core/server';
-import  '../controllers';
-import registerControllers from '../core/registerControllers';
-import controllers from '../controllers';
-import loadModels from '../models';
 import config from '../config/index';
-import Role from '../MongoModels/Role';
+import Role from '../models/Role.js';
 import allMenus from '../config/all_menus';
-import ss from '../secrects.json';
 import apis from '../api';
 
 const Inert = require('inert');
-const Gun   = require('gun');
 
 
 let  secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
@@ -25,12 +19,7 @@ let  secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHu
 
 const JWT    = require('jsonwebtoken');
 
-if(!ss){
-    console.log("添加文件/secrects.json的main节点，填写您的密钥");
-}else{
-    secret = ss.main;
 
-}
 const people = { // our "users database"
     1: {
       id: 1,
@@ -72,12 +61,8 @@ const validateSimple = async (request)=> {
 
 const init = async () => {
     const Vision = require('vision');
-    const Ejs = require('ejs');
-
-    const db = new Gun({
-        web: server.listener,
-        file: 'datastore/gunblock'
-    })
+    server.route(apis);
+   
     if(config.db.driver !== "mongo"){
         await loadModels();
     }else{
@@ -217,100 +202,10 @@ const init = async () => {
         strictHeader: true // don't allow violations of RFC 6265
     });
 
-    server.views({
-        engines: { ejs: Ejs },
-        relativeTo: __dirname,
-        path: '../views'
-    });
-    server.route({
-        method: 'GET',
-        path: '/imgs/{filename}', config: {  auth: false },
-        handler: {
-            file: function (request) {
-                
-                return 'imgs/'+request.params.filename;
-            }
-        }
-    });
-   
-    server.route({
-        method: 'GET',
-        path: '/js/{filename}', config: {  auth: false },
-        handler: {
-            file: function (request) {
-                
-                return 'js/'+request.params.filename;
-            }
-        }
-    });
-   
-    server.route({
-        method: 'GET',
-        path: '/gun/{param*}', config: {  auth: false },
-        handler: {
-          directory: {
-            path: "gun/",
-            redirectToSlash: true,
-            index: true
-          }
-        }
-      });
-
-    server.route({
-        method: 'GET',
-        path: '/css/{filename}',config: {  auth: false },
-        handler: {
-            file: function (request) {
-                
-                return 'css/'+request.params.filename;
-            }
-        }
-    });
-
-    registerControllers(server, controllers);
-    registerControllers(server, apis);
       
-    server.events.on('request', (request, h) => {
-        // console.log(request.path, request.auth);
-    });
+   
     console.log(`Server running at: ${server.info.uri}`);
-    server.ext('onPreResponse', (request, h) => {
-
-        const response = request.response;
-       
-
-        if (response.isBoom &&
-            response.output.statusCode === 403) {
-               
-                return h.view('403', {
-                    title: "正觉工场|403|没有权限",
-                    menu: request.auth.credentials? request.auth.credentials.menu: [],
-                })
-            
-        }
-        if (response.isBoom &&
-            response.output.statusCode === 404) {
-                
-                return h.view('404', {
-                    title: "正觉工场|404|NOT FOUND|页面未找到",
-                    menu: request.auth.credentials? request.auth.credentials.menu: [],
-                })
-            
-        }
-        // if (response.isBoom &&
-        //     response.output.statusCode === 500) {
-        //         console.log(response);
-                
-        //         return h.view('500', {
-        //             title: "正觉工场|500|服务器挂了",
-        //             menu: request.auth.credentials? request.auth.credentials.menu: [],
-        //         })
-            
-        // }
-
-    
-        return h.continue;
-    });
+   
 };
 
 process.on('unhandledRejection', (err) => {
