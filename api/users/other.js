@@ -4,12 +4,12 @@ export default
 [
     {
     
-        method: 'POST',
+        method: 'get',
     
-        path: '/api/v1/auth',
+        path: '/api/v1/auth/check',
 
        
-        config: {  auth: false },
+        config: { auth: 'jwt' },
     
         handler: async (request, h) => {
            console.log(request.auth);
