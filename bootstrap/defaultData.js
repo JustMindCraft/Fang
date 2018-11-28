@@ -17,13 +17,14 @@ function getDefaultApp(secret){
             user: owner
         })
         const appSecret = JWT.sign(app, secret);
-        app.secret = appSecret; 
+        app.secret = appSecret;
+        
     }
     return defaultApp;
 }
 
 function getSuperAdmin(){
-    let superRole = Role.findOne({isSuper: true});
+    let superRole = Role.findOne({isSuper: true, isDefault: true});
     if(!superRole){
         superRole = new Role({
             name: 'superAdmin',
@@ -62,6 +63,12 @@ function getDefaultCards(){
 
 function getDefaultGoodClass(){
     //商店默认新建会员卡类别，包括了零级别会员卡
+
+}
+
+function getDefaultRole(){
+    //默认的角色还包括nobody游客，loginedUser登录游客
+
 }
 
 

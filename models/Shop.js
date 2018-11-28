@@ -8,6 +8,7 @@ const ShopSchema = new mongoose.Schema({
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now },
     cardLevelCurrent: Number,//说明在此店内卡片已经增长到的等级
+    goodClasses: [{ type: Schema.Types.ObjectId, ref: 'GoodClass' }]
   });
 
 const Shop = mongoose.model('Shop', ShopSchema);

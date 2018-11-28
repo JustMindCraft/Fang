@@ -3,7 +3,7 @@ var Schema = mongoose.Schema;
 const DocumentSchema = new mongoose.Schema({
     name: String,
     ipfsHash: String,
-    magneticHash: String,
+    magnetHash: String,
     storage:{ type: Schema.Types.ObjectId, ref: 'Storage' }
   });
 

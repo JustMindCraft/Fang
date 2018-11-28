@@ -21,7 +21,6 @@ const UserSchema = new mongoose.Schema({
       unique: true,
     },
     password: String,
-    posts: [{ type: Schema.Types.ObjectId, ref: 'Post' }],
     roles: [{ type: Schema.Types.ObjectId, ref: 'Role' }],
     profile: { type: Schema.Types.ObjectId, ref: 'Profile' },
     app: [{ type: Schema.Types.ObjectId, ref: 'App' }],
@@ -35,6 +34,7 @@ const UserSchema = new mongoose.Schema({
   const User = mongoose.model('User', UserSchema);
 
   export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername){
+    //根据用户名，邮箱或者手机号查找一个用户
     if(!mobileOrEmailOrUsername){
       return null;
     }
@@ -45,6 +45,6 @@ const UserSchema = new mongoose.Schema({
     ]})
 
     return user;
-  }
+  }//end of function
 
   export default  User;
