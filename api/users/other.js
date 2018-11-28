@@ -1,11 +1,8 @@
 import Joi from 'joi';
 
-
-import Axios from 'axios';
-
-import https from 'https';
-
 import Request from 'request-promise';
+
+import sha256 from 'sha256';
 
 export default 
 [
@@ -118,9 +115,7 @@ export default
                         
                   });
 
-                console.log(ref);
-                
-                return h.response(num).code(200);
+                return h.response(sha256(num)).code(200);
                 
             } catch (error) {
                 console.log(error);
@@ -143,7 +138,7 @@ export default
             auth: false,
 
             tags: ['api', 'login'], 
-            notes: '手机号码作为参数，向云片网请求验证码，返回验证码',
+            notes: '手机号码作为参数，向云片网请求验证码，返回验证码,验证码被sha256加密了',
             description: "获取手机验证码",
            
         },
