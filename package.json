@@ -19,6 +19,7 @@
   "author": "simontaosim",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "babel-core": "^6.26.3",
     "babel-plugin-transform-async-to-module-method": "^6.24.1",
     "babel-preset-es2015-node5": "^1.2.0",
@@ -44,6 +45,8 @@
     "mongoose": "^5.3.9",
     "mysql2": "^1.6.1",
     "nodemon": "^1.18.5",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
     "require-directory": "^2.1.1",
     "sendevent": "^1.0.5",
     "vision": "^5.4.0",

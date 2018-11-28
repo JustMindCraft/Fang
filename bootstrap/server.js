@@ -11,7 +11,14 @@ import allMenus from '../config/all_menus';
 import apis from '../api';
 
 const Inert = require('inert');
+const HapiSwagger = require('hapi-swagger');
 
+const swaggerOptions = {
+    info: {
+            title: 'FangAPI文档',
+            version: '0.1.0',
+        },
+    };
 
 let  secret = 'NeverShareYourSecret'; // Never Share This! even in private GitHub repos!
 
@@ -28,6 +35,9 @@ const people = { // our "users database"
     }
 };
 const token = JWT.sign(people[1], secret); // synchronous
+
+console.log(token);
+
 
 // bring your own validation function
 const validate = async function (decoded, request, h) {
@@ -61,7 +71,6 @@ const validateSimple = async (request)=> {
 
 const init = async () => {
     const Vision = require('vision');
-    server.route(apis);
    
     if(config.db.driver !== "mongo"){
         await loadModels();
@@ -78,6 +87,15 @@ const init = async () => {
 
     await server.register(require('hapi-auth-jwt2'));
     await server.register(require('hapi-auth-cookie'));
+    await server.register([
+        Inert,
+        Vision,
+        {
+            plugin: HapiSwagger,
+            options: swaggerOptions
+        }
+    ]);
+
     
     await server.start();
 
@@ -201,8 +219,9 @@ const init = async () => {
         clearInvalid: false, // remove invalid cookies
         strictHeader: true // don't allow violations of RFC 6265
     });
-
+   
       
+    server.route(apis);
    
     console.log(`Server running at: ${server.info.uri}`);
    

@@ -6,9 +6,11 @@ const ProfileSchema = new mongoose.Schema({
     mobile: Object,
     address: Object,
     signature: String,
+    nickname: String,
+    avatar: String,
     user: { type: Schema.Types.ObjectId, ref: 'User' },
   });
 
-  const Post = mongoose.model('Profile', ProfileSchema);
+const Post = mongoose.model('Profile', ProfileSchema);
 
-  export default  Post;
+export default  Post;
