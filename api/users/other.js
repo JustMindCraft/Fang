@@ -3,9 +3,35 @@ import Joi from 'joi';
 import Request from 'request-promise';
 
 import sha256 from 'sha256';
+import User, { newAdmin } from '../../models/User';
 
 export default 
 [
+    {
+        method: 'GET',
+    
+        path: '/api/v1/test',
+    
+        handler: async (request, h) => {
+
+            
+            
+
+            
+            
+
+           return h.response("测试模型");
+           
+           
+        
+        },
+        options: {
+           
+            auth: false,
+            description: "开始测试模型",
+           
+        },
+    },
     {
     
         method: 'get',
@@ -132,7 +158,7 @@ export default
         options: {
             validate: {
                 payload: Joi.object({
-                    mobile: Joi.string().regex(/^1[3|4|5|7|8][0-9]{9}$/).required().description("大陆手机号码"),
+                    mobile: Joi.string().regex(/^1[3|4|5|7|8|9][0-9]{9}$/).required().description("大陆手机号码"),
                 })
             },
             auth: false,
@@ -227,11 +253,16 @@ export default
         path: '/api/v1/register',
     
         handler: async (request, h) => {
-           const { username, password } = request.payload;
-           if(!username){
-                return h.response("username missing").code(404);
+           const {  appId, email,  mobile, password,  username} = request.payload;
+           let user = User.new({
+            appId, email,  mobile, password,  username
+           })
+           try {
+               await user.save();
+           } catch (error) {
+               return error;
            }
-           return username;
+           return user;
            
            
         
@@ -239,11 +270,11 @@ export default
         options: {
             validate: {
                 payload: Joi.object({
-                    username: Joi.string().required().description("可以是手机号，或者邮箱或者用户名"),
-                    password: Joi.string().required().description("密码"),
+                    appId: Joi.string().optional().description("在哪个应用注册，默认为正觉工场这个应用内注册的"),
+                    email: Joi.string().regex(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/).optional().describe("用户邮箱,会在各个应用内判断重复"),
                     mobile: Joi.string().regex(/^1[3|4|5|7|8][0-9]{9}$/).required().description("大陆手机号码"),
-                    email: Joi.string().optional().describe("用户邮箱,会在各个应用内判断重复"),
-                    appId: Joi.string().optional().description("在哪个应用注册，默认为正觉工场这个应用内注册的")
+                    password: Joi.string().required().description("密码"),
+                    username: Joi.string().regex(/^\w+$/).required().description("用户名"),
                 })
             },
             auth: false,
@@ -258,5 +289,9 @@ export default
         
         
     },
+
+    
+
+
    
 ]

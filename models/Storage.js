@@ -5,6 +5,8 @@ const StorageSchema = new mongoose.Schema({
     super:{ type: Schema.Types.ObjectId, ref: 'Storage' },
     documents: [{ type: Schema.Types.ObjectId, ref: 'Document' }],
     app: { type: Schema.Types.ObjectId, ref: 'App' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   });
 
 const Storage = mongoose.model('Storage', StorageSchema);

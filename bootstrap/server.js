@@ -7,8 +7,8 @@
 import server from '../core/server';
 import config from '../config/index';
 import Role from '../models/Role.js';
-import allMenus from '../config/all_menus';
 import apis from '../api';
+import { setDefaultApp } from '../models/App';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -77,7 +77,7 @@ const init = async () => {
     }else{
         // getting-started.js
         var mongoose = require('mongoose');
-        mongoose.connect(config.mongodb.url);
+        mongoose.connect(config.mongodb.url, { useNewUrlParser: true});
     }
 
     await server.register(Vision);
@@ -132,59 +132,6 @@ const init = async () => {
                 let roles = ['loginedUser'];
                 let access = false;
                 let menu = [];//准备现实的权限菜单
-                   
-                    
-
-            
-                for (let index = 0; index < cached.user.roles.length; index++) {
-                    const role = cached.user.roles[index];
-                    let roleObj = await Role.findById(role);
-                    roles.push(roleObj.name);
-                    if(roleObj.isSuper){
-                        //如果是超级管理员一律放行
-                        roles.push(token);
-                        access = true;
-                        let menuObjs =  Object.getOwnPropertyNames(allMenus);
-                        for (let j = 0; j < menuObjs.length; j++) {
-                            allMenus[menuObjs[j]].path = menuObjs[j];
-                            menu.push(allMenus[menuObjs[j]]);
-                        }
-                        continue;
-                    }else{
-                        let myMenuItem = allMenus['/my'];
-                        myMenuItem.path = '/my';
-                        menu.push(allMenus['/my']);      
-                       
-                    }
-                    if(!roleObj.allowPaths){
-                        continue;
-                    }
-                    let allowPaths = Object.getOwnPropertyNames(roleObj.allowPaths);
-                    
-                    for (let k = 0; k < allowPaths.length; k++) {
-                        let str = allowPaths[k].split('|^');
-                        
-                        if(roleObj.allowPaths[allowPaths[k]] && allMenus[str[1]]){
-                            allMenus[str[1]].path = allowPaths[k];
-                            menu.push(allMenus[str[1]]);
-                            access = true;
-                        
-                        }
-                    }
-                    if(roleObj.allowPaths[method+"|^"+path]){
-                        roles.push(token);
-                        access = true;
-                    
-                    }
-                    
-                }
-                if(cached.user.roles.length === 0){
-                        let myMenuItem = allMenus['/my'];
-                        myMenuItem.path = '/my';
-                        menu.push(allMenus['/my']);      
-                        
-                }
-            
                 
                 let out =  {
                     valid: true,
@@ -220,8 +167,8 @@ const init = async () => {
         strictHeader: true // don't allow violations of RFC 6265
     });
    
-      
     server.route(apis);
+    
    
     console.log(`Server running at: ${server.info.uri}`);
    

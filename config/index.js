@@ -23,13 +23,13 @@ export default {
 		driver: "mongo",
 	},
 	mongodb: {
-		url: "mongodb://localhost:27017/fang_dev"
+		url: "mongodb://localhost:27017/fang_dev1"
 	},
 	mysql: {
 		host: '139.198.6.232',
-		user: 'justmind_dev',
-		database: 'justmind_dev',
-		password: "justmind_dev"
+		user: 'justmind_dev1',
+		database: 'justmind_dev1',
+		password: "justmind_dev1"
 	},
 	pg: {
 		host: '127.0.0.1',
@@ -37,6 +37,7 @@ export default {
 		user: 'dbuser',
 		database: "exampledb",
 		password: 'password',
-	}
+	},
+	mainKey: "tbmKEuEgwn2klIDUlvuOILEgCfOARuSK"
 	
 };

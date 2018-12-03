@@ -8,9 +8,10 @@ const ProfileSchema = new mongoose.Schema({
     signature: String,
     nickname: String,
     avatar: String,
-    user: { type: Schema.Types.ObjectId, ref: 'User' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   });
 
-const Post = mongoose.model('Profile', ProfileSchema);
+const Profile = mongoose.model('Profile', ProfileSchema);
 
-export default  Post;
+export default  Profile;

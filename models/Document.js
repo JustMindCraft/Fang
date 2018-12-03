@@ -4,7 +4,8 @@ const DocumentSchema = new mongoose.Schema({
     name: String,
     ipfsHash: String,
     magnetHash: String,
-    storage:{ type: Schema.Types.ObjectId, ref: 'Storage' }
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
   });
 
 const Document = mongoose.model('Document', DocumentSchema);
