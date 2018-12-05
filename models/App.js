@@ -1,5 +1,5 @@
-import { setSuperAdmin, createAdminForApp } from './User';
-import config from '../config';
+import { setSuperAdmin } from './User';
+
 import { setDefaultAppGoodClass } from './GoodClass';
 
 import { setDefaultCards } from './Good'; 
@@ -31,6 +31,8 @@ const AppSchema = new mongoose.Schema({
     adminHosts: [{type: String}],//管理后台的主机
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
+    smsServiceSecret: String,
+    smsServiceUrl: String,
 });
 
 const App = mongoose.model('App', AppSchema);

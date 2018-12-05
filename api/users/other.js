@@ -13,16 +13,7 @@ export default
         path: '/api/v1/test',
     
         handler: async (request, h) => {
-
-            
-            
-
-            
-            
-
            return h.response("测试模型");
-           
-           
         
         },
         options: {
