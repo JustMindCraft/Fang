@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="https://zhengjue.lododor.com/gun/gun.js"></script>
+    <script src="https://zhengjue.lododor.com/gun/sea.js"></script>
+</head>
+<body>
+
+    <script>
+         var gun = Gun('https://zhengjue.lododor.com/gun');
+         var sea = Gun.SEA;
+         gun.get('root').get('posts').map(function(data, key){
+             if(key !== 'title'){
+                 return data;
+             }else{
+                 return undefined
+             }
+         }).on(function(data, key){
+             console.log(key, data);
+             
+         })
+         gun.get('root').get('posts_body').map(function(data, key){
+             let match = key.match(/身体/i);
+             if(match){
+                 return data
+             }
+         }).on(function(data, key){
+             console.log(key, data);
+             
+         })
+          
+            
+    </script>
+    
+</body>
+</html>
