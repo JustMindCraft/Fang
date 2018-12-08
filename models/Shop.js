@@ -1,3 +1,5 @@
+import AppShop from './AppShop';
+
 var mongoose = require('mongoose');
 const ShopSchema = new mongoose.Schema({
     name: String,
@@ -12,25 +14,28 @@ const ShopSchema = new mongoose.Schema({
 
 const Shop = mongoose.model('Shop', ShopSchema);
 
-export async function createShop(app, owner, shopParams){
+export async function createShop(shopParams, appId){
     
-    let shop = await Shop.findOne({app: app._id, owner: owner._id, ...shopParams});
+    
+    let shop = await Shop.findOne({name: shopParams.name, name_zh: shopParams.name_zh});
     
     if(!shop){
         shop = new Shop({
-            name: app.name+"_shop",
-            name_zh: app.name_zh+"店铺",
-            description: app.name_zh+"店铺",
-            app: app._id,
-            owner: owner._id,
-            createdAt: new Date(),
-            cardLevelCurrent: 0,//说明在此店内卡片已经增长到的等级
-            idDefault: true,
+            ...shopParams
         })
-        owner.shop = shop._id;
-        await owner.save();
+
+        
+       
         await shop.save();
+    }else{
+        return "SHOP_NAME_TAKEN";
     }
+
+    let appShop = new AppShop({
+        shop: shop._id,
+        app: appId,
+    })
+    await appShop.save();
     
     return shop;
 }

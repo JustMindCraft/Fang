@@ -9,4 +9,14 @@ const AppOwnerSchema = new mongoose.Schema({
 
 const AppOwner = mongoose.model('AppOwner', AppOwnerSchema);
 
+export async function getOnwer(appId){
+  
+  let appOwner = await AppOwner.findOne({app: appId, isDeleted: false}).populate('owner',{isDeleted: false});
+
+  console.log(appOwner);
+  
+  
+  return appOwner.owner;
+}
+
 export default  AppOwner;

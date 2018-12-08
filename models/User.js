@@ -49,7 +49,7 @@ export async function setSuperAdmin(){
       });
 
   }else{
-      roleUser =  RoleUser.findOne({role: superRole._id})
+      roleUser = await RoleUser.findOne({role: superRole._id})
       if(!roleUser){
           roleUser = new RoleUser({
               role: superRole._id,
@@ -78,16 +78,16 @@ export async function setSuperAdmin(){
 
 export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername){
 //根据用户名，邮箱或者手机号查找一个用户
-if(!mobileOrEmailOrUsername){
-    return null;
-}
-const user = await User.findOne({$or: [
-    {username: mobileOrEmailOrUsername},
-    {email: mobileOrEmailOrUsername},
-    {username: mobileOrEmailOrUsername}
-]})
+    if(!mobileOrEmailOrUsername){
+        return null;
+    }
+    const user = await User.findOne({$or: [
+        {username: mobileOrEmailOrUsername},
+        {email: mobileOrEmailOrUsername},
+        {username: mobileOrEmailOrUsername}
+    ]})
 
-return user;
+    return user;
 }//end of function
 
   export default  User;

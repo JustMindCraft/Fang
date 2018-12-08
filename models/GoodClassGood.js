@@ -1,3 +1,5 @@
+import Good from './Good';
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const GoodClassGoodSchema = new mongoose.Schema({
@@ -8,5 +10,13 @@ const GoodClassGoodSchema = new mongoose.Schema({
   });
 
 const GoodClassGood = mongoose.model('GoodClassGood', GoodClassGoodSchema);
+
+
+export async function getOneGoodFromGoodClassId(goodClassId, match){
+  let goodClassGood = GoodClassGood.findOne({goodClass: goodClassId})
+  .populate('good', ['name', 'name_zh'],Good, match);
+  return goodClassGood? goodClassGood.good : null;
+}
+
 
 export default  GoodClassGood;

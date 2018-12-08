@@ -1,4 +1,8 @@
 import Role from './Role';
+import { getOneGoodFromGoodClassId } from './GoodClassGood';
+import GoodClass from './GoodClass';
+import { getOneShopFromGoodClassId } from './ShopGoodClass';
+import ShopGood from './ShopGood';
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -42,6 +46,31 @@ const GoodSchema = new mongoose.Schema({
 });
 
 const Good = mongoose.model('Good', GoodSchema);
+
+
+export async function createGood(params, goodClassId){
+    let good = await getOneGoodFromGoodClassId(goodClassId, {name: params.name, name_zh: params.name_zh});
+    if(good){
+        return "GOODNAME already in the same goodClass";
+    }
+
+    good = new Good({
+        ...params,
+    });
+
+    let goodClass = new GoodClass({
+        good: good._id,
+        goodClass: goodClassId
+    });
+    let shop = await getOneShopFromGoodClassId(goodClassId);
+    if(shop){
+        let shopGoods = new ShopGood({
+            shop: shop._id,
+        })
+    }else{
+        return "GOODCLASS_ID NOT FOUND IN DATABASE"
+    }
+}
 
 
 

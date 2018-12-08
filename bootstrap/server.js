@@ -9,6 +9,7 @@ import config from '../config/index';
 import Role from '../models/Role.js';
 import apis from '../api';
 import { setDefaultApp } from '../models/App';
+import { fixture } from './fixture';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -168,6 +169,8 @@ const init = async () => {
     });
    
     server.route(apis);
+
+    await fixture();
     
    
     console.log(`Server running at: ${server.info.uri}`);
