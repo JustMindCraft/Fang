@@ -3,11 +3,10 @@ import AppRole, { getOneRoleForApp } from './AppRole';
 
 var mongoose = require('mongoose');
 const RoleSchema = new mongoose.Schema({
-    name:  {type: String, default: require('uuid/v1')()+"_defaultApp"}, //同一个app内不可重名
+    name:  {type: String, default: require('uuid/v1')()+"_nonamerole"}, //同一个app内不可重名
     name_zh: String,
     isSuper: {type: Boolean, default: false},
     isDefault: {type: Boolean, default: false},
-    createdAt: { type: Date, default: Date.now },
     isSystemAdmin: {type: Boolean, default: false}, 
     //是否是后台管理角色，由于采用了动态角色来实现功能，用户在操作的过程中容易产生大量的角色，而系统角色会关系权限表，需要单独管理。
     ...defaultFields
@@ -40,6 +39,34 @@ export async function createRole(params={}, appId=null){
         
     }
     
+}
+
+
+export async function createDefaultRolesForApp(appId="unknown"){
+    try {
+        await createRole({
+            name: 'nobody',
+            name_zh: "游客",
+            isDefault: true,
+        }, appId);
+        await createRole({
+            name: 'loginedUser',
+            name_zh: "登录用户",
+            isDefault: true,
+        }, appId);
+        await createRole({
+            name: 'admin',
+            name_zh: '管理员',
+            isDefault: false,
+        }, appId)
+        return 1;
+        
+    } catch (error) {
+        console.log(error);
+        return 0;
+        
+    }
+   
 }
 
 export async function newSuperRole(){

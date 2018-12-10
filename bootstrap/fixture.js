@@ -1,28 +1,28 @@
 import { setSuperAdmin } from "../models/User";
-import App, { createApp } from "../models/App";
+import { createApp } from "../models/App";
 import { createShop } from "../models/Shop";
-import { getOnwer } from "../models/AppOwner";
+import { getOwner } from "../models/AppOwner";
 import { assginOwnerForShop } from "../models/ShopOwner";
 import { getSettingValue, setSettingValue } from "../models/Setting";
-import { setDefaultRolesForApp, assginRoleToApp, getOneRoleForApp } from "../models/AppRole";
-import { getRolesByUserId, getOneRoleByUserId, getOneRoleIdByUserId } from "../models/RoleUser";
+import { assginRoleToApp } from "../models/AppRole";
+import { getOneRoleIdByUserId } from "../models/RoleUser";
 import { createGoodClass } from "../models/GoodClass";
 
 //默认数据
 
 
-async function createDefaultApp(appParams){
+async function createDefaultApp(params){
     let owner = await setSuperAdmin();
     
-    let app =  await createApp(appParams,owner._id, "shop");
+    let app =  await createApp(params,owner._id, "shop");
     let roleIdToAssign = await getOneRoleIdByUserId(owner._id, {name: 'superAdmin'});
     await assginRoleToApp(roleIdToAssign, app._id);
 
     return app;
 }
 
-async function createDefaultShop(shopParams, appId){
-    return await createShop(shopParams,appId);
+async function createDefaultShop(params, appId){
+    return await createShop(params,appId);
 
 }
 
@@ -49,7 +49,7 @@ export async function fixture(){
     },app._id);
     
     
-    let ownerToAssign = await getOnwer(app._id);
+    let ownerToAssign = await getOwner(app._id);
     await assginOwnerForShop(ownerToAssign._id, shop._id);
 
     await createGoodClass({
@@ -57,6 +57,5 @@ export async function fixture(){
         name_zh: "会员卡",
         isDefault: true,
     }, shop._id);
-    //将应用管理员指定成为店铺拥有者
 
 }

@@ -1,10 +1,11 @@
+import defaultFields from '../config/defaultFields';
+
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 const AppShopSchema = new mongoose.Schema({
     app: { type: Schema.Types.ObjectId, ref: 'App' },
     shop: { type: Schema.Types.ObjectId, ref: 'User' },
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
+    ...defaultFields
   });
 
 const AppShop = mongoose.model('AppShop', AppShopSchema);

@@ -1,25 +1,23 @@
 var mongoose = require('mongoose');
 const SettingSchema = new mongoose.Schema({
   // 订单始终就是店铺的订单
-    name: String,
-    valText: String,
-    valJudge: Boolean,
+    name: {type: String, default: require('uuid/v1')()},
+    valText: {type: String, default: "unset"},
+    valJudge:  {type: Boolean, default: false },
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
   });
 
 const Setting = mongoose.model('Setting', SettingSchema);
 
-export async function setSettingValue(name, value){
+export async function setSettingValue(name=null, value="unset"){
     console.log(typeof value);
     let setting = null;
     switch (typeof value) {
         case "string":
             setting= await Setting.findOne({name, valText: value});
             if(setting){
-                return {
-                    msg: "Already Exist"
-                }
+                return "Already Exist"
             }else{
                 setting = new  Setting({
                     name,
@@ -31,9 +29,7 @@ export async function setSettingValue(name, value){
         case 'boolean':
             setting= await Setting.findOne({name, valJudge: value});
             if(setting){
-                return {
-                    msg: "Already Exist"
-                }
+                return  "Already Exist"
             }else{
                 setting = new  Setting({
                     name,
@@ -43,15 +39,13 @@ export async function setSettingValue(name, value){
                 return setting;
             }
         default:
-            return {
-                msg: "UNKNOW ERROR"
-            }
+            return "UNSUPPORT TYPE "+(typeof value).toString();
     }
     
     
 }
 
-export async function getSettingValue(name){
+export async function getSettingValue(name=null){
     let setting= await Setting.findOne({name});
     if(!setting){
         return null;

@@ -1,13 +1,12 @@
 import ShopGoodClass, { getOneGoodClassFromShopId } from './ShopGoodClass';
+import defaultFields from '../config/defaultFields';
 
 var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
 const GoodClassSchema = new mongoose.Schema({
     name:  String,//在一个app内不可重名
     name_zh: String,
-    createdAt: { type: Date, default: Date.now },
-    updatedAt: { type: Date, default: Date.now },
     isDefault: Boolean,//默认的分类是规定不可以删除的
+    ...defaultFields
 });
 
 const GoodClass = mongoose.model('GoodClass', GoodClassSchema);

@@ -1,6 +1,7 @@
 import Role, { newSuperRole, newSuperRoleForApp } from './Role';
 import bcrypt from 'bcrypt-nodejs';
 import RoleUser from './RoleUser';
+import defaultFields from '../config/defaultFields';
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -19,6 +20,7 @@ const UserSchema = new mongoose.Schema({
     isDefault: Boolean,
     version: { type: Number, default: 1 },//标记版本，若是不存在则说明这是上一个版本的老用户
     app: { type: Schema.Types.ObjectId, ref: 'App' },
+    ...defaultFields
     
   });
 

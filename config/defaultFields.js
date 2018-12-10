@@ -1,6 +1,6 @@
 export default {
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
-    isDeleted: { type: Date, default: false }
+    isDeleted: { type: Boolean, default: false }
 
 }

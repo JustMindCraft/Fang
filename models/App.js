@@ -1,7 +1,7 @@
 
 import AppOwner from './AppOwner';
-import { setDefaultRolesForApp } from './AppRole';
 import defaultFields from '../config/defaultFields';
+import { createDefaultRolesForApp } from './Role';
 
 var mongoose = require('mongoose');
 const AppSchema = new mongoose.Schema({
@@ -11,30 +11,30 @@ const AppSchema = new mongoose.Schema({
         type: String,
         index: true,
         unique: true,
-        default: require('uuid/v1')()+"_defaultApp"
+        default: require('uuid/v1')()+"_nonameApp"
     },
     name_zh:   {
         type: String,
         unique: true,
-        default: "默认应用"
+        default: "未命名应用"
     },
     type: {type: String, default: "shop"},
-    hosts: {type: String, default: "localhost:3000"}, //主机名
-    isDefault: Boolean,
-    adminHosts: {type: String, default: "localhost:3002"},//管理后台的主机
-    smsServiceSecret: String,
-    smsServiceUrl: String,
+    host: {type: String, default: "localhost:3000"}, //主机名
+    isDefault: {type: String, default: false},
+    adminHost: {type: String, default: "localhost:3002"},//管理后台的主机
+    smsServiceSecret: {type: String, default: "unset"},
+    smsServiceUrl: {type: String, default: "unset"},
     ...defaultFields
 });
 
 const App = mongoose.model('App', AppSchema);
 
-export async function createApp(appParams={}, ownerId=null, type="shop"){
+export async function createApp(params={}, ownerId="unknown", type="shop"){
     // 一个APP的建立必要传入拥有者，app类型, 数据创建类型，第一个参数和关系无关，而之后每个都必须和关系有关
-    if(!appParams.name){
+    if(!params.name){
         return "name required"; 
     }
-    if(!appParams.name_zh){
+    if(!params.name_zh){
         return "name_zh required";
     }
 
@@ -44,10 +44,12 @@ export async function createApp(appParams={}, ownerId=null, type="shop"){
     if(!type){
         return "type required";
     }
-    let app = await App.findOne({name: appParams.name, name_zh: appParams.name_zh, isDeleted: false})
+    let app = await App.findOne({name: params.name, name_zh: params.name_zh, isDeleted: false})
     if(!app){
         app = new App({
-            ...appParams,
+            ...params,
+            secret: require('uuid/v1')(),
+            masterSecret: require('uuid/v1')(),
         });
     }else{
         return "APP_NAME_EXSIT";
@@ -70,18 +72,18 @@ export async function createApp(appParams={}, ownerId=null, type="shop"){
             case "shop":
                 app.type = "shop";
                 await app.save();
-                await setDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id);
                 return app;
             
             case "storage":
                 app.type = "storage";
                 await app.save();
-                await setDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id);
                 return app;
         
             default:
                 await app.save();
-                await setDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id);
                 return app;
         }
     } catch (error) {
