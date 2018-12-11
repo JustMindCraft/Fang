@@ -13,9 +13,17 @@ const AppOwner = mongoose.model('AppOwner', AppOwnerSchema);
 
 export async function getOwner(appId="unknown"){
   
-  let appOwner = await AppOwner.findOne({app: appId, isDeleted: false}).populate('owner',{isDeleted: false});
+  const appOwner = await AppOwner.findOne({app: appId, isDeleted: false}).populate('owner',{isDeleted: false});
   
   return appOwner? appOwner.owner: null;
+}
+
+export async function appOwnerIsMatch(appId, ownerId){
+  const appOnwer = await AppOwner.findOne({app: appId, owner: ownerId});
+  if(appOnwer){
+    return true;
+  }
+  return false;
 }
 
 export default  AppOwner;

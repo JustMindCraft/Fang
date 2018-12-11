@@ -98,11 +98,20 @@ export async function createApp(params={}, ownerId="unknown", type="shop"){
 
 
 export async function getDefaultApp(){
-    let app =  await App.findOne({isDefault: true, isDeleted: false});
+    const app =  await App.findOne({isDefault: true, isDeleted: false});
     if(!app){
         return "default app notfound"
     }
     return app;
+}
+
+export async function isDefaultAppExists(){
+    const app = await App.findOne({isDefault: true, isDeleted: false});
+    if(app)
+    {
+        return true;
+    }
+    return false;
 }
 
 export default  App;
