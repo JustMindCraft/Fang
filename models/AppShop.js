@@ -10,4 +10,17 @@ const AppShopSchema = new mongoose.Schema({
 
 const AppShop = mongoose.model('AppShop', AppShopSchema);
 
+export async function getShopFromApp(appId, fields, match){
+  const appShop = await AppShop.findOne({app: appId}).populate("shop", fields, match);
+  return appShop? appShop.shop : null;
+}
+
+export async function appShopIsMatch(appId, shopId){
+  const appShop = await AppShop.findOne({appId, shopId});
+  if(appShop){
+    return true;
+  }
+  return false;
+}
+
 export default  AppShop;

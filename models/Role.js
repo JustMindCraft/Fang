@@ -42,7 +42,7 @@ export async function createRole(params={}, appId=null){
 }
 
 
-export async function createDefaultRolesForApp(appId="unknown"){
+export async function createDefaultRolesForApp(appId="unknown", type="shop"){
     try {
         await createRole({
             name: 'nobody',
@@ -59,6 +59,22 @@ export async function createDefaultRolesForApp(appId="unknown"){
             name_zh: '管理员',
             isDefault: false,
         }, appId)
+        if(type === 'shop')
+        {
+            await createRole({
+                name: 'shopAdmin',
+                name_zh: '店铺管理员',
+                isDefault: false,
+            }, appId)
+        }
+        if(type === 'storage')
+        {
+            await createRole({
+                name: 'storageAdmin',
+                name_zh: '文件管理员',
+                isDefault: false,
+            }, appId)
+        }
         return 1;
         
     } catch (error) {
@@ -69,7 +85,7 @@ export async function createDefaultRolesForApp(appId="unknown"){
    
 }
 
-export async function newSuperRole(){
+export async function createSuperRole(){
     try {
         const superRole = new Role({
             name: 'superAdmin',
@@ -77,33 +93,15 @@ export async function newSuperRole(){
             isDefault: true,// 任何设为isDefault的记录都是系统内置记录，都不可更改和删除
             isSuper: true,
           })
-          
+        await superRole.save();
         return superRole;
         
     } catch (error) {
-        return console.log(error);
+        console.log(error);
+        return 0;
         
     }
   
-}
-
-export async function newSuperRoleForApp(app){
-  const superRole = newSuperRole();
-  superRole.app = app;
-  return superRole;
-}
-
-
-export async function createSuperRole(){
-    const superRole = newSuperRole();
-    await superRole.save();
-    return superRole;
-}
-
-export async function createSuperRoleForApp(app){
-  const superRole = newSuperRoleForApp(app);
-  await superRole.save();
-  return superRole;
 }
 
 

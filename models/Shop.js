@@ -23,8 +23,6 @@ export async function createShop(params={}, appId='unknown'){
         shop = new Shop({
             ...params
         })
-
-        
        
         await shop.save();
     }else{
@@ -39,5 +37,8 @@ export async function createShop(params={}, appId='unknown'){
     
     return shop;
 }
+
+
+
 
 export default  Shop;

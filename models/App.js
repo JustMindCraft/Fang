@@ -72,18 +72,18 @@ export async function createApp(params={}, ownerId="unknown", type="shop"){
             case "shop":
                 app.type = "shop";
                 await app.save();
-                await createDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id, type);
                 return app;
             
             case "storage":
                 app.type = "storage";
                 await app.save();
-                await createDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id, type);
                 return app;
         
             default:
                 await app.save();
-                await createDefaultRolesForApp(app._id);
+                await createDefaultRolesForApp(app._id, type);
                 return app;
         }
     } catch (error) {

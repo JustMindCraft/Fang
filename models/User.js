@@ -1,4 +1,4 @@
-import Role, { newSuperRole, newSuperRoleForApp } from './Role';
+import Role, { createSuperRole } from './Role';
 import bcrypt from 'bcrypt-nodejs';
 import RoleUser from './RoleUser';
 import defaultFields from '../config/defaultFields';
@@ -22,7 +22,7 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-export async function setAdmin(){
+async function setAdmin(){
         const salt  =  bcrypt.genSaltSync(10);
         const passwordPlain = "superAdmin2019best"
         const password =  bcrypt.hashSync(passwordPlain, salt);
@@ -36,7 +36,7 @@ export async function setAdmin(){
 }
 
 export async function isSuperAdminExist(){
-    const user = await Role.findOne({isSuper: true, isDefault: true, isDeleted: false});
+    const user = await User.findOne({name: 'superAdmin', isDefault: true, isDeleted: false});
     if(user){
         return true;
     }
@@ -48,13 +48,13 @@ export async function setSuperAdmin(){
   let superRole = await Role.findOne({name: 'superAdmin', isSuper: true, isDefault: true});
   let roleUser = null;
   if(!superRole){
-      superRole = await newSuperRole();
+      superRole = await createSuperRole();
       roleUser = new RoleUser({
           role: superRole._id,
       });
 
   }else{
-      roleUser = await RoleUser.findOne({role: superRole._id})
+      roleUser = await RoleUser.findOne({role: superRole._id, isDeleted: false})
       if(!roleUser){
           roleUser = new RoleUser({
               role: superRole._id,
@@ -62,7 +62,7 @@ export async function setSuperAdmin(){
       }
       
   }
-  let superAdmin = await User.findOne({name: 'superAdmin', isDefault: true});
+  let superAdmin = await User.findOne({name: 'superAdmin', isDefault: true, isDeleted: false});
   if(!superAdmin){
       superAdmin = await setAdmin();
       roleUser.user = superAdmin._id;
@@ -71,17 +71,17 @@ export async function setSuperAdmin(){
   }
 
   try {
-      await superRole.save();
       await superAdmin.save();
       await roleUser.save();
       return superAdmin;
   } catch (error) {
       console.error(error);
+      return "SOMETHING WRONG"
   }
    
 }
 
-export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername){
+export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername="null"){
 //根据用户名，邮箱或者手机号查找一个用户
     if(!mobileOrEmailOrUsername){
         return null;
@@ -89,10 +89,13 @@ export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername
     const user = await User.findOne({$or: [
         {username: mobileOrEmailOrUsername},
         {email: mobileOrEmailOrUsername},
-        {username: mobileOrEmailOrUsername}
+        {mobile: mobileOrEmailOrUsername}
     ]})
+    if(!user){
+        return null;
+    }
 
     return user;
 }//end of function
 
-  export default  User;
+export default  User;

@@ -18,9 +18,68 @@ export async function getOwner(appId="unknown"){
   return appOwner? appOwner.owner: null;
 }
 
+export async function bindAppForUser(appId, ownerId){
+  if(!appId){
+    return "APPID REQUIRED";
+  }
+  if(!ownerId){
+    return "OWNERID RQUIRED";
+  }
+  try {
+    const appOwner = new AppOwner({
+      app: appId, 
+      owner: ownerId,
+    })
+    await appOwner.save();
+    return appOwner;
+
+  } catch (error) {
+    console.error(error);
+    return "bindAppForUser SOMETHING WRONG";
+    
+  }
+  
+}
+
 export async function appOwnerIsMatch(appId, ownerId){
   const appOnwer = await AppOwner.findOne({app: appId, owner: ownerId});
   if(appOnwer){
+    return true;
+  }
+  return false;
+}
+
+export async function unbindAppsForOnwer(ownerId='unknown', match={}){
+  const appOwnerRemoveRlt = await AppOwner.deleteMany({owner: ownerId, ...match});
+  if(appOwnerRemoveRlt){
+    return true;
+  }
+  return false;
+}
+
+export async function blockAppsForOnwer(ownerId='unknown', match={}){
+  try {
+    const appOwnerRemoveRlt = await AppOwner.updateMany({owner: ownerId, ...match}, {
+      $set: {
+        status: 'blocked'
+      }
+    });
+    if(appOwnerRemoveRlt){
+      return true;
+    }
+  } catch (error) {
+    console.error(error);
+    return "blockAppsForOnwer SOMETHING WRONG"
+    
+  }
+  
+ 
+  return false;
+}
+
+export async function unbindOwnerForApp(appId, ownerId){
+  const appOnwerRemoveRlt = await AppOwner.deleteOne({app: appId, owner: ownerId});
+  if(appOnwerRemoveRlt){
     return true;
   }
   return false;
