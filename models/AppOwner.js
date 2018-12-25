@@ -6,6 +6,7 @@ const AppOwnerSchema = new mongoose.Schema({
     app: { type: Schema.Types.ObjectId, ref: 'App', default: null },
     owner: { type: Schema.Types.ObjectId, ref: 'User', default: null },
     status: { type: String, default: 'normal' },
+    isDefault: { type: Boolean, default: false },
     ...defaultFields
   });
 
@@ -42,7 +43,7 @@ export async function bindAppForUser(appId, ownerId){
 }
 
 export async function appOwnerIsMatch(appId, ownerId){
-  const appOnwer = await AppOwner.findOne({app: appId, owner: ownerId});
+  const appOnwer = await AppOwner.findOne({app: appId, owner: ownerId, status: 'normal'});
   if(appOnwer){
     return true;
   }

@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 const AppShopSchema = new mongoose.Schema({
     app: { type: Schema.Types.ObjectId, ref: 'App' },
     shop: { type: Schema.Types.ObjectId, ref: 'User' },
+    isDefault: { type: Boolean, default: false},
     ...defaultFields
   });
 

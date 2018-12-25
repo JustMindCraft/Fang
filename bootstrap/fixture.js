@@ -1,61 +1,79 @@
-import { setSuperAdmin } from "../models/User";
-import { createApp } from "../models/App";
-import { createShop } from "../models/Shop";
-import { getOwner } from "../models/AppOwner";
-import { assginOwnerForShop } from "../models/ShopOwner";
-import { getSettingValue, setSettingValue } from "../models/Setting";
-import { assginRoleToApp } from "../models/AppRole";
-import { getOneRoleIdByUserId } from "../models/RoleUser";
-import { createGoodClass } from "../models/GoodClass";
-
-//默认数据
+import seed from '../config/seed';
 
 
-async function createDefaultApp(params){
-    let owner = await setSuperAdmin();
-    
-    let app =  await createApp(params,owner._id, "shop");
-    let roleIdToAssign = await getOneRoleIdByUserId(owner._id, {name: 'superAdmin'});
-    await assginRoleToApp(roleIdToAssign, app._id);
-
-    return app;
-}
-
-async function createDefaultShop(params, appId){
-    return await createShop(params,appId);
-
-}
-
-export async function fixture(){
-    
-    let isDefault = await getSettingValue("defaultDataSettled");
-        
-    if(isDefault){
-        console.log("data already settled");
-        
+export function checkSeed(){
+    if(!seed.superAdmin){
         return false;
-    }else{
-        await setSettingValue("defaultDataSettled", true);
     }
-    let app = await createDefaultApp({
-        name: 'defaultApp',
-        name_zh: "默认应用",
-        isDefault: true,
-    });
-    let shop = await createDefaultShop({
-        name: "defaultShop",
-        name_zh: "默认店铺",
-        isDefault: true,
-    },app._id);
-    
-    
-    let ownerToAssign = await getOwner(app._id);
-    await assginOwnerForShop(ownerToAssign._id, shop._id);
+    if(!seed.superAdmin.username){
+        return false;
+    }
+    if(!seed.superAdmin.password){
+        return false;
+    }
+    if(!seed.defaultApp){
+        return false;
+    }
+    if(!seed.defaultApp.name){
+        return false;
+    }
+    if(!seed.defaultApp.name_zh){
+        return false;
+    }
+    if(!seed.defaultShop.name){
+        return false;
+    }
+    if(!seed.defaultShop.name_zh){
+        return false
+    }
+    if(!seed.defaultShop.description){
+        return false;
+    }
+    if(!seed.defaultShop.classes){
+        return false;
+    }
+    if(seed.defaultShop.classes.length < 2){
+        return false;
+    }
 
-    await createGoodClass({
-        name: "card",
-        name_zh: "会员卡",
-        isDefault: true,
-    }, shop._id);
+    if(!seed.defaultShop.goods){
+        return false;
+    }
+    if(seed.defaultShop.goods.length < 2){
+        return false;
+    }
+    let noNameProducts = seed.defaultShop.goods
+    .filter(good => !good.name || good.name==='');
+    if(noNameProducts.length > 0){
+        return false;
+    }
+    let noImagesProducts = seed.defaultShop.goods
+    .filter(good => !good.images || good.images.length===0);
 
+    if(noImagesProducts.length > 0){
+        return false;
+    }
+
+    let noImageCoverProducts = seed.defaultApp.goods
+    .filter(good => !good.imageCover || good.imageCover==='');
+
+    if(noImageCoverProducts.length > 0){
+        return false;
+    }
+
+    let noImageThumbCoverProducts = seed.defaultApp.goods
+    .filter(good => !good.imageThumb || good.imageThumb==='');
+
+    if(noImageThumbCoverProducts.length > 0){
+        return false;
+    }
+
+    let noDecriptionProducts = seed.defaultApp.goods
+    .filter(good => !good.description || good.description==='');
+
+    if(noDecriptionProducts.length > 0){
+        return false;
+    }
+    
+    return true;
 }

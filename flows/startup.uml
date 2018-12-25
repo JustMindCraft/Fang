@@ -1,0 +1,108 @@
+@startuml
+
+start
+
+if(检查配置文件seed是否都符合要求\nfixture#checkSeed) then(符合)
+else(不符合)
+stop
+endif
+
+partition 初始化超级管理员initSuperAdmin {
+	if(User#isSuperAdminExists\n
+	判断超级管理是否存在) then (存在)
+		if(User#isSuperAdminFitConfig\n
+		判断超级管理是否符合配置文件) then (符合)
+		else(不符合)
+			:User#updateSuperAdmin\n需要根据配置文件更新管理员信息;
+		endif
+	else(不存在)
+			:User#createSuperAdmin\n创建新的管理员;
+	endif
+
+
+}
+
+partition 初始化默认应用 {
+	if(App#isdefaultAppExists\n
+	判断默认应用是否存在) then (存在)
+		if(App#isdefaultAppFitConfig\n
+		判断默认应用是否符合配置文件) then (符合)
+		else(不符合)
+			:App#updateApp\n需要根据配置文件更新默认应用的信息;
+		endif
+	else(不存在)
+			:App#createNewApp\n创建新的默认应用;
+	endif
+	if(AppOwner#getOwner\n获取默认应用的拥有者) then(没有拥有者)
+		:AppOwner#makeUserOwnApp\n让超级管理员拥有默认应用;
+	else(有拥有者)
+		if(AppOwner#appOwnerIsMatch\n默认应用的管理员是否匹配) then(匹配)
+		else(不匹配)
+			:AppOwner#updateOwnerForApp\n更新默认应用的管理员;
+		endif
+	endif
+	
+	
+}
+
+partition 初始化默认商店 {
+	if(Shop#isDefaultShopExists\n默认商店是否存在) then(存在)
+		if(Shop#isDefaultShopFitConfig\n默认商店是否符合配置文件) then(符合)
+		else(不符合)
+		:Shop#updateShop\n根据配置文件更新默认店铺信息;
+		endif
+	else(不存在)
+		:Shop#createShop\n创建新的默认店铺;
+	endif
+	if(AppShop#getApp\n获取商店所属的应用) then(没有所属应用)
+		:AppShop#makeShopBelongApp\n使得默认商店属于默认应用;
+	else(存在所属应用)
+		if(AppShop#appShopIsMatch\n默认店铺和默认应用是否匹配) then(匹配)
+			else(不匹配)
+				:AppOwner#updateAppForShop\n更新默认店铺属于的默认应用;
+			endif
+	endif
+
+}
+
+partition 初始化默认店铺产品分类 {
+	if(GoodClass#isDefaultGoodClassExists\n默认产品分类是否存在) then(存在)
+		if(GoodClass#isDefaultGoodClassFitConfig\n默认产品分类都是否符合配置文件) then(符合)
+		else(不符合)
+		:GoodClass#updateGoodClass\n根据配置文件更新默认产品分类;
+		endif
+	else(不存在)
+		:GoodClass#createGoodClass\n创建新的默认产品分类;
+	endif
+	if(ShopGoodClass#getShop\n获取默认产品分类所属的店铺) then(没有所属店铺)
+		:ShopGoodClass#makeGoodClassBelongShop\n使得默认产品分类属于默认店铺;
+	else(存在所属店铺)
+		if(ShopGoodClass#hasGoodClasses\n默认店铺和默认产品分类是否匹配) then(匹配)
+			else(不匹配)
+				:ShopGoodClass#updateShopForGoodClass\n更新默认产品分类属于的默认店铺;
+			endif
+	endif
+}
+
+partition 初始化店铺默认产品 {
+	if(Good#isDefaultGoodExists\n默认产品是否存在) then(存在)
+		if(Good#isDefaultFitConfig\n默认产品都是否符合配置文件) then(符合)
+		else(不符合)
+		:Good#updateGood\n根据配置文件更新默认产品分类;
+		endif
+	else(不存在)
+		:Good#createGood\n创建新的默认产品;
+	endif
+	if(ShopGood#getShop\n获取默认产品所属的店铺) then(没有所属店铺)
+		:ShopGood#makeGoodBelongShop\n使得默认产品属于默认店铺;
+	else(存在所属店铺)
+		if(ShopGood#hasGood\n默认店铺和默认产品是否匹配) then(匹配)
+			else(不匹配)
+				:ShopGood#updateShopForGood\n更新默认产品属于的默认店铺;
+			endif
+	endif
+}
+
+stop
+
+@enduml

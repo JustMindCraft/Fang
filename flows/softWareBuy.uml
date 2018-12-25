@@ -1,0 +1,42 @@
+@startuml
+
+start
+
+:用户点击立即购买软件;
+:填写应用名称;
+:填写店铺名称;
+:填写用户的二级或者三级域名;
+if(用户是否购买的了带支付系统的套餐) then(是)
+:填写公众号支付回调地址;
+else(否)
+endif
+:Order#CreateOrder\n保存未支付订单;
+if(User#currentUser\n用户是否登录) then(是)
+else(否)
+:用户登录\nUser#auth;
+    if(用户不登录) then(没有登录)
+    stop;
+    endif
+endif
+if(RoleUser#getRoleFromUser\n用户是否是会员) then(是)
+else(否)
+:Order#updateOrder\n生成折扣价格的订单;
+endif
+:提交订单并且支付;
+if(是否支付成功) then(是)
+:Order#updateOrder\n更新订单状态;
+:App#createApp\n生成应用;
+:Order#createShop\n生成店铺;
+else(否)
+:Order#updateOrder\n更新订单状态为未支付;
+stop;
+endif
+
+
+
+
+
+
+stop
+
+@enduml

@@ -1,6 +1,7 @@
 import Role, { createSuperRole } from './Role';
 import bcrypt from 'bcrypt-nodejs';
 import RoleUser from './RoleUser';
+import seed from '../config/seed'
 import defaultFields from '../config/defaultFields';
 
 var mongoose = require('mongoose');
@@ -13,7 +14,7 @@ const UserSchema = new mongoose.Schema({
     isPasswordSettledByUser: {type: Boolean, default: false},
     lastLoginTime: { type: Date, default: Date.now },
     loginRecords: {type: Array, default: []},
-    isDefault: {type: Boolean, default: false},
+    isSuper: {type: Boolean, default: false},
     version: { type: Number, default: 1 },//标记版本，若是不存在则说明这是上一个版本的老用户
     ...defaultFields
     
@@ -22,80 +23,70 @@ const UserSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', UserSchema);
 
-async function setAdmin(){
-        const salt  =  bcrypt.genSaltSync(10);
-        const passwordPlain = "superAdmin2019best"
-        const password =  bcrypt.hashSync(passwordPlain, salt);
-        const superAdmin = new User({
-            username: 'superAdmin',
-            password,
-            isPasswordSettledByUser: false,
-            isDefault: true,
-        });
-        return superAdmin;
-}
 
-export async function isSuperAdminExist(){
-    const user = await User.findOne({name: 'superAdmin', isDefault: true, isDeleted: false});
+
+// =====================创建超级管理员相关
+async function isSuperAdminExists(){
+    let user = await  User.findOne({isSuper: true, isDeleted: false});
     if(user){
         return true;
     }
     return false;
+    
 }
 
 
-export async function setSuperAdmin(){
-  let superRole = await Role.findOne({name: 'superAdmin', isSuper: true, isDefault: true});
-  let roleUser = null;
-  if(!superRole){
-      superRole = await createSuperRole();
-      roleUser = new RoleUser({
-          role: superRole._id,
-      });
-
-  }else{
-      roleUser = await RoleUser.findOne({role: superRole._id, isDeleted: false})
-      if(!roleUser){
-          roleUser = new RoleUser({
-              role: superRole._id,
-          });
-      }
-      
-  }
-  let superAdmin = await User.findOne({name: 'superAdmin', isDefault: true, isDeleted: false});
-  if(!superAdmin){
-      superAdmin = await setAdmin();
-      roleUser.user = superAdmin._id;
-  }else{
-      roleUser.user = superAdmin._id;
-  }
-
-  try {
-      await superAdmin.save();
-      await roleUser.save();
-      return superAdmin;
-  } catch (error) {
-      console.error(error);
-      return "SOMETHING WRONG"
-  }
-   
-}
-
-export async function findOneWithMobileOrEmailOrUsername(mobileOrEmailOrUsername="null"){
-//根据用户名，邮箱或者手机号查找一个用户
-    if(!mobileOrEmailOrUsername){
-        return null;
-    }
-    const user = await User.findOne({$or: [
-        {username: mobileOrEmailOrUsername},
-        {email: mobileOrEmailOrUsername},
-        {mobile: mobileOrEmailOrUsername}
-    ]})
+async function isSuperAdminFitConfig(){
+    let user = await  User.findOne({isSuper: true, isDeleted: false, username: seed.superAdmin.username});
     if(!user){
-        return null;
+        return false;
     }
+    let authed = bcrypt.compareSync(seed.superAdmin.password, user.password);
+    if(authed){
+        return true; 
+    }
+    return false;
 
-    return user;
-}//end of function
+}
+
+async function createSuperAdmin(){
+    const salt = bcrypt.genSaltSync(Math.random(10));
+    const hash = bcrypt.hashSync(seed.superAdmin.password, salt);
+    let user = new User({
+        username: seed.superAdmin.username,
+        password: hash,
+    })
+    return await user.save();
+
+}
+
+async function updateSuperAdmin(){
+    const salt = bcrypt.genSaltSync(Math.random(10));
+    const hash = bcrypt.hashSync(seed.superAdmin.password, salt);
+    return await User.update({isSuper: true},{
+        $set: {
+            username: seed.superAdmin.username,
+            password: hash,
+        }
+    })
+
+}
+
+export async function initSuperAdmin(){
+    if(await isSuperAdminExists()){
+        if(await isSuperAdminFitConfig()){
+            return true;
+        }else{
+            return await updateSuperAdmin()
+        }
+    }
+    
+    return await createSuperAdmin();
+}
+
+// =====================创建超级管理员相关结束===========
+
+
+
 
 export default  User;

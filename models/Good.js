@@ -33,6 +33,7 @@ const GoodSchema = new mongoose.Schema({
     descriptionDraftJs: String, //draftJs格式的商品描述
     descriptionHtml: String, //html格式的商品描述
     descriptionMarkdown: String, //markdown格式的商品描述
+    description: String, //默认格式描述
     //描述类型统统需要存储，以便在任何情况下格式都可以被迁移和转换
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
