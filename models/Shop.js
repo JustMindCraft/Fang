@@ -1,5 +1,8 @@
 import AppShop from './AppShop';
 import defaultFields from '../config/defaultFields';
+import { isUserIdExist } from './User';
+import { isAppIdExists } from './App';
+import ShopOwner, { assginOwnerForShop } from './ShopOwner';
 
 var mongoose = require('mongoose');
 const ShopSchema = new mongoose.Schema({
@@ -14,28 +17,46 @@ const ShopSchema = new mongoose.Schema({
 
 const Shop = mongoose.model('Shop', ShopSchema);
 
-export async function createShop(params={}, appId='unknown'){
-    
-    
-    let shop = await Shop.findOne({name: params.name, name_zh: params.name_zh});
-    
-    if(!shop){
-        shop = new Shop({
-            ...params
-        })
-       
-        await shop.save();
-    }else{
-        return "SHOP_NAME_TAKEN";
+export async function isShopNameExists(name){
+    const shop = await Shop.findOne({name, isDelete: false})
+    if(shop){
+        return true;
     }
+    return false;
+}
 
-    let appShop = new AppShop({
-        shop: shop._id,
-        app: appId,
-    })
-    await appShop.save();
+export async function createShop(params={}, appId=null, owner=null){
+    if(!params.name){
+        assert.fail("params.name必需传入,检查Shop#createShop方法")
+        return false;
+    }
+    if(!(await isShopNameExists(name))){
+        return "shop_name_already_exists";
+    }
+    if(!(await isUserIdExist(owner))){
+        return "owner_is_not_an_effictive_user";
+    }
+    if(!(await isAppIdExists(appId))){
+        return 'appId_is_not_an_effictive_app';
+    }
+    const shop = new Shop({
+        ...params,
+    });
+
+    try {
+        await shop.save();
+        let rlt = await assginOwnerForShop(ownerId, shop._id);
+        if(rlt !== "shop_or_owner_already_assigned"){
+            return true;
+        }else{
+            return false;
+        }
+    } catch (error) {
+        assert.fail(error);
+        return false;
+    }
     
-    return shop;
+    
 }
 
 

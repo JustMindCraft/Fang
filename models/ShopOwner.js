@@ -19,16 +19,18 @@ export async function assginOwnerForShop(ownerId, shopId){
         })
     }else{
         return {
-            msg: "SHOP OR OWNER ALREADY ASSIGN",
+            msg: "shop_or_owner_already_assigned",
             shopOwner
         }
     }
-    await shopOwner.save();
-
-    return {
-        msg: "CREATE SUCCESS",
-        shopOwner
+    try {
+        await shopOwner.save();
+        return true;
+        
+    } catch (error) {
+        assert.fail(error);
     }
+
 }
 
 export default  ShopOwner;

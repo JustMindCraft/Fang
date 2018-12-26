@@ -1,8 +1,13 @@
 
-import AppOwner from './AppOwner';
 import defaultFields from '../config/defaultFields';
-import { createDefaultRolesForApp } from './Role';
 import seed from '../config/seed';
+import { isUserIdExist, getSuperAdmin } from './User';
+import { createShop } from './Shop';
+import { makeUserOwnApp } from './AppOwner';
+import { makeUserBelongApp } from './AppUser';
+import Role, { createDefaultRolesForApp } from './Role';
+import { assignUserForRole } from './RoleUser';
+import { getOneRoleForApp } from './AppRole';
 
 var mongoose = require('mongoose');
 const AppSchema = new mongoose.Schema({
@@ -31,85 +36,105 @@ const AppSchema = new mongoose.Schema({
 const App = mongoose.model('App', AppSchema);
 
 export async function isAppNameExists(name){
-    let app = await App.findOne({name, isDeleted: false})
+    const app = await App.findOne({name, isDeleted: false})
     if(app){
         return true;
     }
     return false;
 }
 
-export async function createApp(params={}, ownerId=null, type="shop"){
-    // 一个APP的建立必要传入拥有者，app类型, 数据创建类型，第一个参数和关系无关，而之后每个都必须和关系有关
-    //这个函数也必须生成默认的角色类型
-    if(!params.name){
-        return "name required"; 
+export async function isAppIdExists(appId){
+    const app = await App.findOne({_id: appId, isDeleted: false});
+    if(app){
+        return true;
     }
-
-    if(!ownerId){
-        return "ownerId required";
-    }
-    if(!type){
-        return "type required";
-    }
-    let app = null;
-    if(isAppNameExists(params.name)){
-        app = new App({
-            ...params,
-            secret: require('uuid/v1')(),
-            masterSecret: require('uuid/v1')(),
-        });
-    }else{
-        return "APP_NAME_EXSIT";
-    }
-    
-
-    let appOwner = await AppOwner.findOne({owner: ownerId, isDeleted: false});
-    if (!appOwner) {
-        appOwner = new AppOwner({
-            app: app._id,
-            owner: ownerId,
-        })
-    }else{
-        appOwner.app = app._id;
-    }
-    try {
-        await appOwner.save();
-    
-        switch (type) {
-            case "shop":
-                app.type = "shop";
-                await app.save();
-                await createDefaultRolesForApp(app._id, type);
-                return app;
-            
-            case "storage":
-                app.type = "storage";
-                await app.save();
-                await createDefaultRolesForApp(app._id, type);
-                return app;
-        
-            default:
-                await app.save();
-                await createDefaultRolesForApp(app._id, type);
-                return app;
-        }
-    } catch (error) {
-        console.log(error);
-        return "SOMETHING WRONG";
-        
-    }
-
-    
-
+    return false;
 }
 
 
-export async function getDefaultApp(){
-    const app =  await App.findOne({isDefault: true, isDeleted: false});
-    if(!app){
-        return "default app notfound"
+export async function createApp(params={}, ownerId=null, type="shop"){
+    if(!params.name){
+       assert.fail("应用名称params.name必需传入，检查App#createApp传入参数")
     }
-    return app;
+    if(!type){
+        assert.fail("应用类型type必需传入，检查App#createApp传入参数")
+    }
+    if(await isAppNameExists(params.name)){
+        
+        return "app_name_already_exists";
+    }
+
+    if(!(await isUserIdExist(ownerId))){
+        return "owner_is_not_an_effective_user";
+    }
+    const app = new App({
+        ...params,
+        type,
+    })
+    switch (type) {
+        case "shop":
+            app.type = "shop";
+            await app.save();
+            await createShop({
+                name: app.name+"商城",
+                isDefault: true,
+            }, app._id, ownerId);
+            
+            break;
+    
+        default:
+            app.type = "shop";
+            await app.save();
+            await createShop({
+                name: app.name+"商城",
+                isDefault: true,
+            }, app._id, ownerId);
+            
+            break;
+    }
+    try {
+        await makeUserOwnApp(ownerId, app._id);
+        await makeUserBelongApp(ownerId, app._id);
+        await createDefaultRolesForApp(app._id, type);
+        let role = getOneRoleForApp(app.id, {name: 'registerdUser'});
+        await assignUserForRole(ownerId, role._id);
+        if(type === 'shop'){
+            role = getOneRoleForApp(app.id, {name: 'shopAdmin'});
+            await assignUserForRole(ownerId, role._id);
+        }
+        if(type === 'storage'){
+            role = getOneRoleForApp(app.id, {name: 'storageAdmin'});
+            await assignUserForRole(ownerId, role._id);
+        }
+        
+        return true;
+        
+    } catch (error) {
+        assert.fail(error);
+    }
+
+
+
+}
+
+async function updateOneApp(params, appId){
+    if(!(await isAppIdExists(appId))){
+        return 'appId_is_not_an_effictive_app';
+    }
+    if(params.type){
+        return 'it_is_not_allowed_to_update_app_type';
+    }
+    try {
+        const rlt = await App.updateOne({_id: appId},{
+            $set: {
+                ...params
+            }
+        })
+        return rlt;
+        
+    } catch (error) {
+        
+    }
 }
 
 
@@ -129,6 +154,27 @@ async function isDefaultAppFitConfig(){
         return true;
     }
     return false;
+}
+
+export async function initDefaultApp(){
+    const superAdmin = await getSuperAdmin();
+    const isExist = await isDefaultAppExists();
+    const fitConfig = await isDefaultAppFitConfig();
+    if(!isExist){
+        try {
+            await createApp(seed.defaultApp, superAdmin._id, 'shop');
+            
+        } catch (error) {
+            assert.fail(error);
+        }
+    }
+    if(!fitConfig){
+        try {
+            await updateOneApp(seed.defaultApp);
+        } catch (error) {
+            assert.fail(error);
+        }
+    }
 }
 
 //=========================初始化应用方法=======================

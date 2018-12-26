@@ -15,16 +15,26 @@ const RoleSchema = new mongoose.Schema({
 const Role = mongoose.model('Role', RoleSchema);
 
 
+export async function isRoleIdExists(roleId){
+    const role = await Role.findOne({_id: roleId, isDeleted: false});
+    if(role){
+        return true;
+    }
+    return false;
+}
+
 export async function createRole(params={}, appId=null){
     if(!params.name){
-        return 'name required';
+        assert.fail('应用名称params.name必需传入，检查App#createRole参数')
+        return false;
     }
     if(!appId){
-        return 'appId required'
+        assert.fail('应用名称appId必需传入，检查App#createRole参数')
+        return false;
     }
-    let role = await getOneRoleForApp(appId, {name: params.name, name_zh: params.name_zh});
+    let role = await getOneRoleForApp(appId, {name: params.name});
     if(role){
-        return "role name or name_zh exists"
+        return "role_name_exists"
     }else{
         role = new Role({
             ...params
@@ -42,7 +52,7 @@ export async function createRole(params={}, appId=null){
 }
 
 
-export async function createDefaultRolesForApp(appId="unknown", type="shop"){
+export async function createDefaultRolesForApp(appId=null, type="shop"){
     try {
         await createRole({
             name: 'nobody',
@@ -50,7 +60,7 @@ export async function createDefaultRolesForApp(appId="unknown", type="shop"){
             isDefault: true,
         }, appId);
         await createRole({
-            name: 'loginedUser',
+            name: 'registeredUser',
             name_zh: "登录用户",
             isDefault: true,
         }, appId);
@@ -78,7 +88,7 @@ export async function createDefaultRolesForApp(appId="unknown", type="shop"){
         return 1;
         
     } catch (error) {
-        console.log(error);
+        assert.fail(error)
         return 0;
         
     }

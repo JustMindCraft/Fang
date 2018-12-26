@@ -25,13 +25,19 @@ const User = mongoose.model('User', UserSchema);
 
 
 export async function isUserIdExist(userId){
-     const user = User.findById(userId);
+     const user = User.findOne({_id: userId, isDeleted: false});
      if(user){
          return true;
      }
      return false;
 
 }
+
+export async function getSuperAdmin(){
+    const user = User.findOne({isSuper: true, isDeleted: false})
+    return user? user: "not_found";
+}
+
 
 
 // =====================创建超级管理员相关
@@ -66,7 +72,8 @@ async function createSuperAdmin(){
         password: hash,
         isSuper: true,
     })
-    return await user.save();
+    await user.save();
+    return true;
 
 }
 
