@@ -6,10 +6,8 @@
 
 import server from '../core/server';
 import config from '../config/index';
-import Role from '../models/Role.js';
 import apis from '../api';
-import { setDefaultApp } from '../models/App';
-import { fixture } from './fixture';
+import { checkSeed } from './fixture';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -170,7 +168,10 @@ const init = async () => {
    
     server.route(apis);
 
-    await fixture();
+    if(checkSeed()){
+        console.log('配置文件通过检查');
+        
+    }
     
    
     console.log(`Server running at: ${server.info.uri}`);
