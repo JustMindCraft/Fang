@@ -8,6 +8,7 @@ import server from '../core/server';
 import config from '../config/index';
 import apis from '../api';
 import { checkSeed } from './fixture';
+import { initSuperAdmin } from '../models/User';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -71,13 +72,9 @@ const validateSimple = async (request)=> {
 const init = async () => {
     const Vision = require('vision');
    
-    if(config.db.driver !== "mongo"){
-        await loadModels();
-    }else{
-        // getting-started.js
-        var mongoose = require('mongoose');
-        mongoose.connect(config.mongodb.url, { useNewUrlParser: true});
-    }
+   
+    var mongoose = require('mongoose');
+    mongoose.connect(config.mongodb.url, { useNewUrlParser: true});
 
     await server.register(Vision);
     
@@ -170,6 +167,9 @@ const init = async () => {
 
     if(checkSeed()){
         console.log('配置文件通过检查');
+        console.log('开始设置超级管理员');
+
+        initSuperAdmin();
         
     }
     

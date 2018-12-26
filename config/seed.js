@@ -1,7 +1,7 @@
 export default {
     superAdmin: {
-        username: "superAdmin",
-        password: "112358",
+        username: "superAdmin2",
+        password: "superAdimn2017beset",
     },
     defaultApp: {
         name: "正觉工场"

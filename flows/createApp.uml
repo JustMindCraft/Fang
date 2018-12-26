@@ -1,0 +1,55 @@
+@startuml
+
+start
+:输入应用参数，包括名称，主机名，类型, \n短信服务APIkey, 短信服务调用地址;
+if(应用参数是否有名称) then(有)
+else(没有)
+:抛出没有应用名错误;
+stop
+endif 
+if(判断应用名称是否存在？\nApp#isAppNameExist) then(存在)
+stop
+else(不存在)
+
+endif
+:输入应用的拥有者id;
+if(应用拥有者是否存在\nUser#isUserIdExist) then(存在)
+else(不存在)
+stop
+endif
+
+
+if(应用类型是店铺) then(是)
+:设置应用类型为店铺;
+:创建默认店铺\nShop#createShop;
+
+else(不是)
+endif
+if(应用类型是存储) then(是)
+:设置应用类型为存储;
+:创建默认存储空间\nStore#createStore;
+
+else(不是)
+:设置应用类型为店铺;
+:创建默认店铺\nShop#createShop;
+endif
+
+
+:将应用的拥有者设为传入的用户ID;
+:保存应用信息;
+:创建应用拥有关系\nAppOwner#makeUserOwnApp;
+
+if(应用的拥有者是否属于这用户的用户\nAppUser#isUserIdBelongApp) then(属于)
+else(不属于)
+:创建应用用户关系\nAppUser#makeUserBelongApp;
+endif
+
+:创建默认应用的角色\nRole.createDefaultRoles;
+:将用户设为这应用的管理员角色\nRoleUser#setUserRoleName;
+:将用户设为这应用的注册用户角色\nRoleuser#setUserRoleName;
+
+
+
+stop
+
+@enduml

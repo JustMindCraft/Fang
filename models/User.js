@@ -24,6 +24,15 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model('User', UserSchema);
 
 
+export async function isUserIdExist(userId){
+     const user = User.findById(userId);
+     if(user){
+         return true;
+     }
+     return false;
+
+}
+
 
 // =====================创建超级管理员相关
 async function isSuperAdminExists(){
@@ -55,6 +64,7 @@ async function createSuperAdmin(){
     let user = new User({
         username: seed.superAdmin.username,
         password: hash,
+        isSuper: true,
     })
     return await user.save();
 
@@ -63,7 +73,7 @@ async function createSuperAdmin(){
 async function updateSuperAdmin(){
     const salt = bcrypt.genSaltSync(Math.random(10));
     const hash = bcrypt.hashSync(seed.superAdmin.password, salt);
-    return await User.update({isSuper: true},{
+    return await User.updateOne({isSuper: true},{
         $set: {
             username: seed.superAdmin.username,
             password: hash,
