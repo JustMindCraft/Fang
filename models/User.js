@@ -1,6 +1,4 @@
-import Role, { createSuperRole } from './Role';
 import bcrypt from 'bcrypt-nodejs';
-import RoleUser from './RoleUser';
 import seed from '../config/seed'
 import defaultFields from '../config/defaultFields';
 
@@ -24,7 +22,7 @@ const UserSchema = new mongoose.Schema({
 const User = mongoose.model('User', UserSchema);
 
 
-export async function isUserIdExist(userId){
+export async function isUserIdExists(userId){
      const user = User.findOne({_id: userId, isDeleted: false});
      if(user){
          return true;

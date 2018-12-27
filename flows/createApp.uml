@@ -13,7 +13,7 @@ else(不存在)
 
 endif
 :输入应用的拥有者id;
-if(应用拥有者是否存在\nUser#isUserIdExist) then(存在)
+if(应用拥有者是否存在\nUser#isUserIdExists) then(存在)
 else(不存在)
 stop
 endif

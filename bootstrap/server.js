@@ -9,6 +9,7 @@ import config from '../config/index';
 import apis from '../api';
 import { checkSeed } from './fixture';
 import { initSuperAdmin } from '../models/User';
+import { initDefaultApp } from '../models/App';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -169,7 +170,8 @@ const init = async () => {
         console.log('配置文件通过检查');
         console.log('开始设置超级管理员');
 
-        initSuperAdmin();
+        await initSuperAdmin();
+        await initDefaultApp();
         
     }
     

@@ -1,5 +1,5 @@
 import Role, { isRoleIdExists } from './Role';
-import { isUserIdExist } from './User';
+import { isUserIdExists } from './User';
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -44,7 +44,7 @@ export async function matchRoleUser(userId, roleId){
 }
 
 export async function assignUserForRole(userId, roleId){
-  if(!(await isUserIdExist(ownerId))){
+  if(!(await isUserIdExists(userId))){
     return "owner_is_not_an_effective_user";
   }
   if(!(await isRoleIdExists(roleId))){

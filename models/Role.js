@@ -1,5 +1,6 @@
 import defaultFields from '../config/defaultFields';
 import AppRole, { getOneRoleForApp } from './AppRole';
+import assert from 'assert';
 
 var mongoose = require('mongoose');
 const RoleSchema = new mongoose.Schema({

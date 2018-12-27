@@ -1,11 +1,12 @@
 
 import defaultFields from '../config/defaultFields';
 import seed from '../config/seed';
-import { isUserIdExist, getSuperAdmin } from './User';
+import { isUserIdExists, getSuperAdmin } from './User';
 import { createShop } from './Shop';
-import { makeUserOwnApp } from './AppOwner';
+import { makeUserOwnApp, getOwner, appOwnerIsMatch, updateOwnerForApp } from './AppOwner';
 import { makeUserBelongApp } from './AppUser';
-import Role, { createDefaultRolesForApp } from './Role';
+import { createDefaultRolesForApp } from './Role';
+import assert from 'assert';
 import { assignUserForRole } from './RoleUser';
 import { getOneRoleForApp } from './AppRole';
 
@@ -21,8 +22,7 @@ const AppSchema = new mongoose.Schema({
     },
     name_zh:   {
         type: String,
-        unique: true,
-        default: "未命名应用"
+        default: ""
     },
     type: {type: String, default: "shop"},
     host: {type: String, default: "localhost:3000"}, //主机名
@@ -64,35 +64,39 @@ export async function createApp(params={}, ownerId=null, type="shop"){
         return "app_name_already_exists";
     }
 
-    if(!(await isUserIdExist(ownerId))){
+    if(!(await isUserIdExists(ownerId))){
         return "owner_is_not_an_effective_user";
     }
     const app = new App({
         ...params,
         type,
     })
-    switch (type) {
-        case "shop":
-            app.type = "shop";
-            await app.save();
-            await createShop({
-                name: app.name+"商城",
-                isDefault: true,
-            }, app._id, ownerId);
-            
-            break;
-    
-        default:
-            app.type = "shop";
-            await app.save();
-            await createShop({
-                name: app.name+"商城",
-                isDefault: true,
-            }, app._id, ownerId);
-            
-            break;
-    }
+   
     try {
+        console.log(type);
+        
+        switch (type) {
+            case "shop":
+                app.type = "shop";
+                await app.save();
+                await createShop({
+                    name: app.name+"商城",
+                    isDefault: true,
+                }, app._id, ownerId);
+                console.log('建立商城结束');
+                
+                break;
+        
+            default:
+                app.type = "shop";
+                await app.save();
+                await createShop({
+                    name: app.name+"商城",
+                    isDefault: true,
+                }, app._id, ownerId);
+                
+                break;
+        }
         await makeUserOwnApp(ownerId, app._id);
         await makeUserBelongApp(ownerId, app._id);
         await createDefaultRolesForApp(app._id, type);
@@ -133,7 +137,8 @@ async function updateOneApp(params, appId){
         return rlt;
         
     } catch (error) {
-        
+        assert(error);
+        return false;
     }
 }
 
@@ -156,6 +161,16 @@ async function isDefaultAppFitConfig(){
     return false;
 }
 
+async function getDefaultApp(){
+    const app = await App.findOne({isDefault: true, isDeleted: false});
+    if(app)
+    {
+        return app;
+    }
+    return false;
+    
+}
+
 export async function initDefaultApp(){
     const superAdmin = await getSuperAdmin();
     const isExist = await isDefaultAppExists();
@@ -175,6 +190,25 @@ export async function initDefaultApp(){
             assert.fail(error);
         }
     }
+    try {
+        const defaultApp = await getDefaultApp();
+        const owner = await getOwner(defaultApp._id);
+        if(!owner){
+            return await makeUserOwnApp(owner._id, defaultApp._id);
+        }else{
+            const match = await appOwnerIsMatch(defaultApp._id, owner._id);
+            if(!match){
+                return await updateOwnerForApp(defaultApp._id, owner._id);
+            }else{
+                return true;
+            }
+        }
+       
+    } catch (error) {
+        assert(error);
+    }
+   
+   
 }
 
 //=========================初始化应用方法=======================

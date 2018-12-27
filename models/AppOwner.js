@@ -1,5 +1,7 @@
 import defaultFields from '../config/defaultFields';
 import { isAppIdExists } from './App';
+import assert from 'assert';
+import { isUserIdExists } from './User';
 
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
@@ -28,7 +30,7 @@ export async function getApp(userId=null, match={}){
 
 export async function makeUserOwnApp(userId, appId){
   //注意owner和app是一对多的关系
-  if(!(await isUserIdExist(userId))){
+  if(!(await isUserIdExists(userId))){
     return "userId_is_not_an_effective_user";
   }
   if(!(await isAppIdExists(appId))){
@@ -63,29 +65,26 @@ export async function makeUserOwnApp(userId, appId){
   
 }
 
+export async function updateOwnerForApp(appId, userId){
+  //注意owner和app是一对多的关系
+  if(!(await isUserIdExists(userId))){
+    return "userId_is_not_an_effective_user";
+  }
+  if(!(await isAppIdExists(appId))){
+    return "appId_is_not_an_effictive_app";
+  }
 
-export async function bindAppForUser(appId, ownerId){
-  if(!appId){
-    return "APPID REQUIRED";
-  }
-  if(!ownerId){
-    return "OWNERID RQUIRED";
-  }
-  try {
-    const appOwner = new AppOwner({
-      app: appId, 
-      owner: ownerId,
-    })
-    await appOwner.save();
-    return appOwner;
-
-  } catch (error) {
-    console.error(error);
-    return "bindAppForUser SOMETHING WRONG";
-    
-  }
+  return  await AppOwner.updateOne({app: appId},{
+    $set: {
+      user: userId,
+    }
+  });
   
+
 }
+
+
+
 
 export async function appOwnerIsMatch(appId, ownerId){
   const appOnwer = await AppOwner.findOne({app: appId, owner: ownerId, status: 'normal'});
@@ -95,40 +94,6 @@ export async function appOwnerIsMatch(appId, ownerId){
   return false;
 }
 
-export async function unbindAppsForOnwer(ownerId='unknown', match={}){
-  const appOwnerRemoveRlt = await AppOwner.deleteMany({owner: ownerId, ...match});
-  if(appOwnerRemoveRlt){
-    return true;
-  }
-  return false;
-}
 
-export async function blockAppsForOnwer(ownerId='unknown', match={}){
-  try {
-    const appOwnerRemoveRlt = await AppOwner.updateMany({owner: ownerId, ...match}, {
-      $set: {
-        status: 'blocked'
-      }
-    });
-    if(appOwnerRemoveRlt){
-      return true;
-    }
-  } catch (error) {
-    console.error(error);
-    return "blockAppsForOnwer SOMETHING WRONG"
-    
-  }
-  
- 
-  return false;
-}
-
-export async function unbindOwnerForApp(appId, ownerId){
-  const appOnwerRemoveRlt = await AppOwner.deleteOne({app: appId, owner: ownerId});
-  if(appOnwerRemoveRlt){
-    return true;
-  }
-  return false;
-}
 
 export default  AppOwner;
