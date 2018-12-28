@@ -96,25 +96,6 @@ export async function createDefaultRolesForApp(appId=null, type="shop"){
    
 }
 
-export async function createSuperRole(){
-    try {
-        const superRole = new Role({
-            name: 'superAdmin',
-            name_zh: "超级管理员",
-            isDefault: true,// 任何设为isDefault的记录都是系统内置记录，都不可更改和删除
-            isSuper: true,
-          })
-        await superRole.save();
-        return superRole;
-        
-    } catch (error) {
-        console.log(error);
-        return 0;
-        
-    }
-  
-}
-
 
 
 export default  Role;

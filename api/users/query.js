@@ -26,7 +26,6 @@ export default
                
                 
             } catch (error) {
-                console.log(error);
                 
                 return h.response("服务器出错，联系管理员").code(500);
             }

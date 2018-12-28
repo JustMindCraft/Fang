@@ -135,7 +135,6 @@ export default
                 return h.response(sha256(num)).code(200);
                 
             } catch (error) {
-                console.log(error);
                 return h.response("出错").code(501);
             }
             

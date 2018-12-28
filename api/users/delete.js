@@ -19,7 +19,6 @@ export default [
         config: { auth: false },
         
         handler: async (request, h) => {
-            console.log(request.params);
             
         }
 

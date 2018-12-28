@@ -92,6 +92,8 @@ export async function initSuperAdmin(){
         if(await isSuperAdminFitConfig()){
             return true;
         }else{
+            console.log("seed已经更改，正在更新超级管理员数据");
+            
             return await updateSuperAdmin()
         }
     }

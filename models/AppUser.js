@@ -13,7 +13,6 @@ const AppUserSchema = new mongoose.Schema({
 const AppUser = mongoose.model('AppUser', AppUserSchema);
 
 export async function makeUserBelongApp(userId, appId){
-  console.log('使得用户属于应用');
   
   //此处是多对多的关系
   if(!(await isUserIdExists(userId))){
@@ -24,11 +23,9 @@ export async function makeUserBelongApp(userId, appId){
   }
   let appUser = await AppUser.findOne({user: userId, app: appId});
   if(appUser){
-  console.log(appUser);
 
     return "app_user_relation_already_exist";
   }else{
-  console.log('没有找到应用用户关系');
     
     try {
       appUser = new AppUser({

@@ -53,6 +53,7 @@ export async function isAppIdExists(appId){
 
 
 export async function createApp(params={}, ownerId=null, type="shop"){
+    
     if(!params.name){
        assert.fail("应用名称params.name必需传入，检查App#createApp传入参数")
     }
@@ -73,7 +74,6 @@ export async function createApp(params={}, ownerId=null, type="shop"){
     })
    
     try {
-        console.log(type);
         
         switch (type) {
             case "shop":
@@ -83,7 +83,6 @@ export async function createApp(params={}, ownerId=null, type="shop"){
                     name: app.name+"商城",
                     isDefault: true,
                 }, app._id, ownerId);
-                console.log('建立商城结束');
                 
                 break;
         
@@ -154,14 +153,14 @@ async function isDefaultAppExists(){
     return false;
 }
 async function isDefaultAppFitConfig(){
-    const app = await App.findOne({isDefault: true, isDeleted: false, name: seed.defaultApp.name});
+    const app = await App.findOne({...seed.defaultApp, isDefault: true, isDeleted: false});
     if(app){
         return true;
     }
     return false;
 }
 
-async function getDefaultApp(){
+export async function getDefaultApp(){
     const app = await App.findOne({isDefault: true, isDeleted: false});
     if(app)
     {
@@ -174,18 +173,29 @@ async function getDefaultApp(){
 export async function initDefaultApp(){
     const superAdmin = await getSuperAdmin();
     const isExist = await isDefaultAppExists();
-    const fitConfig = await isDefaultAppFitConfig();
+    
     if(!isExist){
+        
         try {
-            await createApp(seed.defaultApp, superAdmin._id, 'shop');
+            await createApp({...seed.defaultApp, isDefault: true, isDeleted: false}, superAdmin._id, 'shop');
             
         } catch (error) {
             assert.fail(error);
         }
     }
+
+    const fitConfig = await isDefaultAppFitConfig();
     if(!fitConfig){
+        console.log("seed已经更改，更新默认应用信息");
+        
+        const app = await getDefaultApp();
+        
         try {
-            await updateOneApp(seed.defaultApp);
+            await updateOneApp({
+                ...seed.defaultApp,
+                isDefault: true,
+                isDeleted: false,
+            }, app._id );
         } catch (error) {
             assert.fail(error);
         }

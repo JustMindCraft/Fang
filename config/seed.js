@@ -1,13 +1,13 @@
 export default {
     superAdmin: {
-        username: "superAdmin2",
-        password: "superAdimn2017beset",
+        username: "superAdmin",
+        password: "superAdmin2017best",
     },
     defaultApp: {
-        name: "正觉工场"
+        name: "正觉工场",
     },
     defaultShop: {
-        name: "市场",
+        name: "正觉市场",
         description: "探索我们的产品",
         classes: ["会员卡", "软件", "IT服务"],
         goods: [

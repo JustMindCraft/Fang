@@ -10,6 +10,7 @@ import apis from '../api';
 import { checkSeed } from './fixture';
 import { initSuperAdmin } from '../models/User';
 import { initDefaultApp } from '../models/App';
+import { initDefaultShop } from '../models/Shop';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -36,8 +37,6 @@ const people = { // our "users database"
     }
 };
 const token = JWT.sign(people[1], secret); // synchronous
-
-console.log(token);
 
 
 // bring your own validation function
@@ -142,7 +141,6 @@ const init = async () => {
             
             return out;
             } catch (error) {
-                console.log(error);
                 return error;
                 
             }
@@ -167,11 +165,25 @@ const init = async () => {
     server.route(apis);
 
     if(checkSeed()){
-        console.log('配置文件通过检查');
-        console.log('开始设置超级管理员');
+        try {
+            console.log('配置文件通过检查');
+            console.log('开始设置超级管理员');
 
-        await initSuperAdmin();
-        await initDefaultApp();
+            await initSuperAdmin();
+            console.log('开始设置设置默认应用');
+
+            await initDefaultApp();
+
+            console.log('开始设置设置默认店铺');
+
+            await initDefaultShop();
+
+        } catch (error) {
+            console.error(error);
+            
+            assert.fail(error);
+        }
+        
         
     }
     
@@ -181,7 +193,6 @@ const init = async () => {
 };
 
 process.on('unhandledRejection', (err) => {
-    console.log(err);
     process.exit(1);
 });
 

@@ -11,7 +11,6 @@ const SettingSchema = new mongoose.Schema({
 const Setting = mongoose.model('Setting', SettingSchema);
 
 export async function setSettingValue(name=null, value="unset"){
-    console.log(typeof value);
     let setting = null;
     switch (typeof value) {
         case "string":

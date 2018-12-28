@@ -1,9 +1,10 @@
-import AppShop, { makeShopBelongApp } from './AppShop';
+import { makeShopBelongApp, getDefaultShop } from './AppShop';
 import defaultFields from '../config/defaultFields';
-import { isUserIdExists } from './User';
-import { isAppIdExists } from './App';
-import ShopOwner, { assginOwnerForShop } from './ShopOwner';
+import { isUserIdExists, getSuperAdmin } from './User';
+import { isAppIdExists, getDefaultApp } from './App';
+import { assginOwnerForShop } from './ShopOwner';
 import assert from 'assert'
+import seed from '../config/seed';
 
 var mongoose = require('mongoose');
 const ShopSchema = new mongoose.Schema({
@@ -20,7 +21,6 @@ const Shop = mongoose.model('Shop', ShopSchema);
 
 export async function isShopNameExists(name){
     const shop = await Shop.findOne({name, isDelete: false})
-    console.log(shop);
     
     if(shop){
         return true;
@@ -30,7 +30,6 @@ export async function isShopNameExists(name){
 
 export async function isShopIdExists(shopId){
     const shop = await Shop.findOne({_id: shopId, isDeleted: false})
-    console.log(shop);
     
     if(shop){
         return true;
@@ -59,15 +58,13 @@ export async function createShop(params={}, appId=null, owner=null){
     const shop = new Shop({
         ...params,
     });
-    console.log(shop);
     
 
     try {
         await shop.save();
         await assginOwnerForShop(owner, shop._id);
-        console.log('把店铺绑定给app');
         
-        return await makeShopBelongApp(shop._id, appId);
+        return await makeShopBelongApp(shop._id, appId, shop.isDefault);
         
     } catch (error) {
         assert.fail(error);
@@ -77,6 +74,90 @@ export async function createShop(params={}, appId=null, owner=null){
     
 }
 
+
+//=====begin=======初始化默认店铺相关方法
+export async function isDefaultShopExist(){
+    const shop = await getDefaultShop();
+    if(shop){
+        return true;
+    }
+    return false;
+}
+export async function isDefaultShopFitConfig(){
+    const shopName = seed.defaultShop.name;
+    const shopDescription = seed.defaultShop.description;
+    const shop = await Shop.findOne({
+        name: shopName, 
+        description: 
+        shopDescription, 
+        isDefault: true,
+        isDeleted: false
+    })
+    if(shop){
+        return true;
+    }
+    return false;
+}
+export async function updateOneShop(params, shopId){
+    const isExists = await isShopIdExists(shopId);
+    if(!isExists){
+        assert.fail('shopId_is_not_an_effictive_shop');
+    }
+    try {
+        return await Shop.updateOne({_id: shopId}, {
+            $set: {
+                ...params,
+            }
+        })
+    } catch (error) {
+        assert.fail(error);
+    }
+}
+
+export async function initDefaultShop(){
+    const shopName = seed.defaultShop.name;
+    const shopDescription = seed.defaultShop.description;
+   
+    try {
+        const isExist = await isDefaultShopExist();
+        const owner = await getSuperAdmin();
+        const app = await getDefaultApp();
+        if(!isExist){
+             await createShop({
+                name: shopName, 
+                description: 
+                shopDescription, 
+                isDefault: true,
+                isDeleted: false
+            }, app._id, owner._id);
+        }
+        const shop = await getDefaultShop();
+        const isFitConfig = await isDefaultShopFitConfig();
+        if(!isFitConfig){
+            console.log("正在更新默认店铺信息");
+            
+             await updateOneShop({
+                name: shopName, 
+                description: 
+                shopDescription, 
+                isDefault: true,
+                isDeleted: false
+            }, shop._id)
+        }
+        await makeShopBelongApp(shop._id, app._id, true);
+        
+        return true;
+    } catch (error) {
+        console.error(error);
+        
+        return false;
+    }
+
+
+    
+}
+
+//====end===========初始化默认店铺相关方法
 
 
 
