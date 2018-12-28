@@ -11,6 +11,7 @@ import { checkSeed } from './fixture';
 import { initSuperAdmin } from '../models/User';
 import { initDefaultApp } from '../models/App';
 import { initDefaultShop } from '../models/Shop';
+import { fitDefaultGoodClassesWithConfig } from '../models/ShopGoodClass';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -177,6 +178,11 @@ const init = async () => {
             console.log('开始设置设置默认店铺');
 
             await initDefaultShop();
+
+            console.log('开始设置默认店铺的默认的产品分类');
+
+            await fitDefaultGoodClassesWithConfig();
+            
 
         } catch (error) {
             console.error(error);

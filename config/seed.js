@@ -9,11 +9,12 @@ export default {
     defaultShop: {
         name: "正觉市场",
         description: "探索我们的产品",
-        classes: ["会员卡", "软件", "IT服务"],
+        classes: ["会员卡", "软件", "IT服务",'购车'],
         goods: [
             {
                 name: "正觉工场会员卡",
                 description: "会员卡",
+                class: '会员卡',
                 images: [
                     'https://res.cloudinary.com/da7efhqvt/image/upload/v1545225684/zhengjue/imgs/vip1.jpg',
                 ],
@@ -23,6 +24,7 @@ export default {
             {
                 name: "基础电商软件包",
                 description: "会员卡",
+                class: '软件',
                 images: [
                     'https://res.cloudinary.com/da7efhqvt/image/upload/v1545225684/zhengjue/imgs/shop1.jpg',
                 ],
