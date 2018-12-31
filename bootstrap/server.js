@@ -12,6 +12,7 @@ import { initSuperAdmin } from '../models/User';
 import { initDefaultApp } from '../models/App';
 import { initDefaultShop } from '../models/Shop';
 import { fitDefaultGoodClassesWithConfig } from '../models/ShopGoodClass';
+import { initCard } from '../models/Good';
 
 const Inert = require('inert');
 const HapiSwagger = require('hapi-swagger');
@@ -181,6 +182,11 @@ const init = async () => {
             console.log('开始设置默认店铺的默认的产品分类');
 
             await fitDefaultGoodClassesWithConfig();
+
+            console.log('开始设置默认店铺的卡片');
+
+            await initCard();
+            
         
         
     }

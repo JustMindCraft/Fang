@@ -10,8 +10,13 @@ export default {
         name: "正觉市场",
         description: "探索我们的产品",
         classes: ["会员卡", "软件服务", "IT服务","预约租车"],
-        card: {
-            name: '正觉工场会员卡'
+        card: {//这是设置初始化的会员卡
+            name: '正觉工场会员卡',
+            imageCover: '',
+            imageCoverBig: '',
+            images: [],
+            price: 36500,
+            givable: true,
         }
         
     }

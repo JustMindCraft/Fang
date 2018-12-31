@@ -17,6 +17,7 @@ export async function createGoodClass(params, shopId){
     try {
         const isExists = await isShopIdExists(shopId);
         if(!isExists){
+            console.error('shopId_is_not_an_effictive_shop');
             assert.fail('shopId_is_not_an_effictive_shop');
         }
         let goodClass = await getOneGoodClassFromShopId(shopId,['name', '_id'], {name: params.name});

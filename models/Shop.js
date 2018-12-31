@@ -5,6 +5,8 @@ import { isAppIdExists, getDefaultApp } from './App';
 import { assginOwnerForShop } from './ShopOwner';
 import assert from 'assert'
 import seed from '../config/seed';
+import GoodClass from './GoodClass';
+import { createGood } from './Good';
 
 var mongoose = require('mongoose');
 const ShopSchema = new mongoose.Schema({
@@ -64,7 +66,25 @@ export async function createShop(params={}, appId=null, owner=null){
         await shop.save();
         await assginOwnerForShop(owner, shop._id);
         
-        return await makeShopBelongApp(shop._id, appId, shop.isDefault);
+        await makeShopBelongApp(shop._id, appId, shop.isDefault);
+        
+        const defaultGoodClass = new GoodClass({
+            isDefault: true,
+            name: shop.name+'vip',
+            name_zh: shop.name+'会员卡'
+        });
+        const defaultShopGoodClass = new GoodClass({
+            isDefault: true,
+            shop: shop._id,
+            goodClass: defaultGoodClass._id,
+        })
+        await defaultShopGoodClass.save();
+        await defaultGoodClass.save();
+        await createGood({
+            name: 'level0card',
+            name_zh: '零级会员卡'
+        },defaultGoodClass._id, true);
+        return true;
         
     } catch (error) {
         assert.fail(error);

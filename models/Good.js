@@ -2,6 +2,9 @@ import ShopGood from './ShopGood';
 import { getDefaultShop } from './AppShop';
 import seed from '../config/seed';
 import GoodClass from './GoodClass';
+import ShopGoodClass from './ShopGoodClass';
+import GoodClassGood from './GoodClassGood';
+import assert from 'assert';
 
 const mongoose = require('mongoose');
 const GoodSchema = new mongoose.Schema({
@@ -49,6 +52,68 @@ const GoodSchema = new mongoose.Schema({
 
 const Good = mongoose.model('Good', GoodSchema);
 
+export async function isGoodNameExist(name, goodClassId){
+    const good = await Good.findOne({name, isDeleted: false})
+    if(!good){
+        return false;
+    }
+    const shopGoodClass = await ShopGoodClass.findOne({goodClass: goodClassId, isDeleted: false})
+    const shopGood = await ShopGood.findOne({good: good._id, shop: shopGoodClass.shop, isDeleted: false});
+    if(shopGood){
+        return true;
+    }
+    return false;
+}
+
+
+export async function createGood(params, goodClassId, isDefault){
+    try {
+        if(await isGoodNameExist(params.name, goodClassId)){
+            return 'shop_good_name_exists'
+        }
+
+        const good = new Good({
+            ...params.name,
+            isDefault
+        });
+
+        await good.save();
+
+        const goodClassGood = new GoodClassGood({
+            good: good._id,
+            goodClass: goodClassId,
+            isDefault
+        });
+
+        await goodClassGood.save();
+
+        const shopGoodClass = await ShopGoodClass.findOne({goodClass: goodClassId});
+        console.log(shopGoodClass);
+        if(!shopGoodClass){
+            console.error('默认');
+            
+        }
+
+        const shopGood = new ShopGood({
+            shop: shopGoodClass.shop,
+            good: good._id,
+            isDefault
+        })
+
+        await shopGood.save();
+
+        return true;
+
+    } catch (error) {
+        console.error(error);
+        return false;
+        
+    }
+    
+
+
+}
+
 
 export async function getDefaultGoods(){
     try {
@@ -62,5 +127,47 @@ export async function getDefaultGoods(){
         
     }
 }
+
+export async function initCard(){
+    try {
+        const defaultShop = await getDefaultShop();
+        if(!defaultShop){
+            console.error("默认店铺创建失败");
+            console.log(defaultShop);
+            assert.fail("默认店铺创建失败");
+        }
+        const defaultVipClass = await ShopGoodClass.findOne({
+            shop: defaultShop._id,
+        }).populate('goodClass',['_id', 'name'],{
+            name: defaultShop.name+'vip'
+        });
+        console.log(defaultVipClass);
+        
+
+        if(!defaultVipClass){
+            console.error("默认店铺会员卡类型创建失败");
+            console.log(defaultShop);
+            assert.fail("默认店铺会员卡类型创建失败");
+        }
+
+        const goodClassCard = await GoodClassGood.findOne({
+            goodClass: defaultVipClass._id,
+            isDefault: true,
+        }).populate('good', ['_id', 'name'], {
+            name: 'level0card'
+        }).select('good');
+    } catch (error) {
+        console.error(error);
+        assert.fail(error);
+        
+    }
+    
+
+    
+
+
+}
+
+
 
 export default  Good;
