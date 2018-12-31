@@ -73,7 +73,7 @@ export async function createGood(params, goodClassId, isDefault){
         }
 
         const good = new Good({
-            ...params.name,
+            ...params,
             isDefault
         });
 

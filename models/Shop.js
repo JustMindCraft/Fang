@@ -7,6 +7,7 @@ import assert from 'assert'
 import seed from '../config/seed';
 import GoodClass from './GoodClass';
 import { createGood } from './Good';
+import ShopGoodClass from './ShopGoodClass';
 
 var mongoose = require('mongoose');
 const ShopSchema = new mongoose.Schema({
@@ -73,20 +74,26 @@ export async function createShop(params={}, appId=null, owner=null){
             name: shop.name+'vip',
             name_zh: shop.name+'会员卡'
         });
-        const defaultShopGoodClass = new GoodClass({
+        const defaultShopGoodClass = new ShopGoodClass({
             isDefault: true,
             shop: shop._id,
             goodClass: defaultGoodClass._id,
         })
         await defaultShopGoodClass.save();
         await defaultGoodClass.save();
+        console.log({defaultShopGoodClass});
+        
         await createGood({
             name: 'level0card',
-            name_zh: '零级会员卡'
+            name_zh: '零级会员卡',
+            isCard: true,
+            isDefault: true,
         },defaultGoodClass._id, true);
         return true;
         
     } catch (error) {
+        console.error("创建店铺错误",error);
+        
         assert.fail(error);
         return false;
     }
