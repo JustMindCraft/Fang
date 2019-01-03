@@ -167,6 +167,7 @@ const init = async () => {
     server.route(apis);
 
     if(checkSeed()){
+        try {
             console.log('配置文件通过检查');
             console.log('开始设置超级管理员');
 
@@ -180,14 +181,18 @@ const init = async () => {
             await initDefaultShop();
 
             console.log('开始设置默认店铺的默认的产品分类');
-
             await fitDefaultGoodClassesWithConfig();
+            
+           ;
 
             console.log('开始设置默认店铺的卡片');
-
-            await initCard();
+            console.log( await initCard());
+        } catch (error) {
+            console.error(error);
+            assert.fail(error);
             
-        
+        }
+           
         
     }
     

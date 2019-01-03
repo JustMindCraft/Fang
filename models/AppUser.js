@@ -34,6 +34,8 @@ export async function makeUserBelongApp(userId, appId){
       await appUser.save();
       return true;
     } catch (error) {
+      console.error(error);
+      
       assert.fail(error);
     }
   }

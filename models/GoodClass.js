@@ -2,6 +2,8 @@ import ShopGoodClass, { getOneGoodClassFromShopId } from './ShopGoodClass';
 import defaultFields from '../config/defaultFields';
 import { isShopIdExists } from './Shop';
 
+import assert from 'assert'
+
 var mongoose = require('mongoose');
 const GoodClassSchema = new mongoose.Schema({
     name:  String, //在一个shop内不可重名
@@ -30,13 +32,12 @@ export async function createGoodClass(params, shopId){
         })
         await goodClass.save();
 
-        await new ShopGoodClass({
+        return await new ShopGoodClass({
             shop: shopId,
             goodClass: goodClass._id,
             isDefault: goodClass.isDefault,
         }).save();
 
-        return true;
     } catch (error) {
         console.error(error);
         return false;
@@ -50,14 +51,6 @@ export async function createGoodClass(params, shopId){
 }
 
 
-//================初始化产品分类方法======================
 
-
-export async function isDefaultGoodClassFitConfig(){
-    const defaultGoodClass = await GoodClass.findOne({});
-
-}
-
-//==================初始化产品分类方法结束
 
 export default  GoodClass;

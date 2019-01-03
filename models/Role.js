@@ -89,8 +89,9 @@ export async function createDefaultRolesForApp(appId=null, type="shop"){
         return 1;
         
     } catch (error) {
+        console.error(error);
+        
         assert.fail(error)
-        return 0;
         
     }
    

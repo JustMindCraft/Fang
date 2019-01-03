@@ -70,6 +70,8 @@ export async function createApp(params={}, ownerId=null, type="shop"){
     }
     const app = new App({
         ...params,
+        secret: require('uuid/v1')(),
+        masterSecret: require('uuid/v1')(),
         type,
     })
    
@@ -113,6 +115,8 @@ export async function createApp(params={}, ownerId=null, type="shop"){
         return true;
         
     } catch (error) {
+        console.error(error);
+        
         assert.fail(error);
     }
 
@@ -161,12 +165,21 @@ async function isDefaultAppFitConfig(){
 }
 
 export async function getDefaultApp(){
-    const app = await App.findOne({isDefault: true, isDeleted: false});
-    if(app)
-    {
-        return app;
+    try {
+        const app = await App.findOne({isDefault: true, isDeleted: false});
+        // console.log(app);
+        
+        if(app)
+        {
+            return app;
+        }
+        return false;
+    } catch (error) {
+        console.error(error);
+        assert.fail(error)
+        
     }
-    return false;
+   
     
 }
 
@@ -180,6 +193,8 @@ export async function initDefaultApp(){
             await createApp({...seed.defaultApp, isDefault: true, isDeleted: false}, superAdmin._id, 'shop');
             
         } catch (error) {
+            console.error(error);
+            
             assert.fail(error);
         }
     }
@@ -197,6 +212,8 @@ export async function initDefaultApp(){
                 isDeleted: false,
             }, app._id );
         } catch (error) {
+            console.error(error);
+            
             assert.fail(error);
         }
     }

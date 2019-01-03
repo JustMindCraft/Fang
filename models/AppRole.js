@@ -34,7 +34,9 @@ export async function assginRoleToApp(roleId=null, appId=null, isDefault=false){
     await appRole.save()
     return true;
   } catch (error) {
-    assert.fail(error)
+    console.error(error);
+    
+    assert.fail(error);
   }
   return false;
   

@@ -28,6 +28,8 @@ export async function assginOwnerForShop(ownerId, shopId){
         return true;
         
     } catch (error) {
+        console.error(error);
+        
         assert.fail(error);
     }
 

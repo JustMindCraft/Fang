@@ -5,7 +5,7 @@ import { isAppIdExists, getDefaultApp } from './App';
 import { assginOwnerForShop } from './ShopOwner';
 import assert from 'assert'
 import seed from '../config/seed';
-import GoodClass from './GoodClass';
+import GoodClass, { createGoodClass } from './GoodClass';
 import { createGood } from './Good';
 import ShopGoodClass from './ShopGoodClass';
 
@@ -41,21 +41,25 @@ export async function isShopIdExists(shopId){
 }
 
 export async function createShop(params={}, appId=null, owner=null){
+    
     if(!params.name){
         
         assert.fail("params.name必需传入,检查Shop#createShop方法")
         return false;
     }
     if(await isShopNameExists(params.name)){
-
+        console.error("shop_name_already_exists");
+        
         return "shop_name_already_exists";
     }
     if(!(await isUserIdExists(owner))){
-
+        console.error('owner_is_not_an_effictive_user');
+        
         return "owner_is_not_an_effictive_user";
     }
     if(!(await isAppIdExists(appId))){
-
+        console.error("appId_is_not_an_effictive_app");
+        
         return 'appId_is_not_an_effictive_app';
     }
     const shop = new Shop({
@@ -64,24 +68,26 @@ export async function createShop(params={}, appId=null, owner=null){
     
 
     try {
-        await shop.save();
+         await shop.save();
         await assginOwnerForShop(owner, shop._id);
         
         await makeShopBelongApp(shop._id, appId, shop.isDefault);
         
-        const defaultGoodClass = new GoodClass({
+       
+        const defaultGoodClass = await createGoodClass({
             isDefault: true,
             name: shop.name+'vip',
             name_zh: shop.name+'会员卡'
-        });
+        }, shop._id);
+
+        
         const defaultShopGoodClass = new ShopGoodClass({
             isDefault: true,
             shop: shop._id,
             goodClass: defaultGoodClass._id,
         })
+        
         await defaultShopGoodClass.save();
-        await defaultGoodClass.save();
-        console.log({defaultShopGoodClass});
         
         await createGood({
             name: 'level0card',
@@ -89,13 +95,12 @@ export async function createShop(params={}, appId=null, owner=null){
             isCard: true,
             isDefault: true,
         },defaultGoodClass._id, true);
-        return true;
+        return shop;
         
     } catch (error) {
         console.error("创建店铺错误",error);
         
         assert.fail(error);
-        return false;
     }
     
     
@@ -137,6 +142,8 @@ export async function updateOneShop(params, shopId){
             }
         })
     } catch (error) {
+        console.error(error);
+        
         assert.fail(error);
     }
 }
@@ -176,8 +183,7 @@ export async function initDefaultShop(){
         return true;
     } catch (error) {
         console.error(error);
-        
-        return false;
+        assert.fail(error)
     }
 
 

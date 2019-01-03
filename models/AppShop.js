@@ -21,13 +21,20 @@ export async function getShopFromApp(appId, fields, match){
 
 export async function getDefaultShop(){
   const app = await getDefaultApp();
+  // console.log({app});
+
   if(!app){
+    console.error("default_app_is_not_settled");
+    
     assert.fail("default_app_is_not_settled");
   }
   
   const appShop = await AppShop.findOne({app: app._id, isDefault: true, isDeleted: false})
   .populate("shop", ['_id', 'name', 'description'],
    {isDeleted: false, isDefault: true});
+
+  //  console.log(appShop);
+   
   
    return appShop? appShop.shop : null;
 }
@@ -72,6 +79,8 @@ export async function makeShopBelongApp(shopId, appId, isDefault=false){
     
     return true;
   } catch (error) {
+    console.error(error);
+    
     assert.fail(error);
     return false;
   }

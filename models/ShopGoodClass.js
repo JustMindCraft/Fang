@@ -63,29 +63,11 @@ export async function fitDefaultGoodClassesWithConfig(){
          }
       }
     });
-    const defaultShopClasses = await ShopGoodClass.find({isDefault: true, isDeleted: false, shop: defaultShop._id})
-    .populate('goodClass', ['_id', 'name']).select(['goodClass', 'shop']);
-    //开始删除冗余产品类型
-    let countGoodClassName = {};
-    
-    defaultShopClasses.forEach(async shopGoodClass=>{
-      if(configGoodClasses.includes(shopGoodClass.goodClass.name)){
-        if(!countGoodClassName[shopGoodClass.goodClass.name]){
-          countGoodClassName[shopGoodClass.goodClass.name]=1;
-        }else{
-          await ShopGoodClass.deleteOne({_id: shopGoodClass._id});
-          await GoodClass.deleteOne({_id: shopGoodClass.goodClass._id});
-        }
-      }else{
-        await ShopGoodClass.deleteOne({_id: shopGoodClass._id});
-        await GoodClass.deleteOne({_id: shopGoodClass.goodClass._id});
-      }
-      
-    })
+   
     return true;
   } catch (error) {
     console.error(error);
-    return false;
+    
     
   }
   

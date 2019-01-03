@@ -63,6 +63,8 @@ export async function assignUserForRole(userId, roleId){
     return true;
     
   } catch (error) {
+    console.error(error);
+    
       assert.fail(error);
       return false;
   }

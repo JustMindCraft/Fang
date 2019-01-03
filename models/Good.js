@@ -53,16 +53,23 @@ const GoodSchema = new mongoose.Schema({
 const Good = mongoose.model('Good', GoodSchema);
 
 export async function isGoodNameExist(name, goodClassId){
-    const good = await Good.findOne({name, isDeleted: false})
-    if(!good){
+    try {
+        const good = await Good.findOne({name, isDeleted: false})
+        if(!good){
+            return false;
+        }
+        const shopGoodClass = await ShopGoodClass.findOne({goodClass: goodClassId, isDeleted: false})
+        const shopGood = await ShopGood.findOne({good: good._id, shop: shopGoodClass.shop, isDeleted: false});
+        if(shopGood){
+            return true;
+        }
         return false;
+    } catch (error) {
+        console.error(error);
+        assert.fail(error);
+        
     }
-    const shopGoodClass = await ShopGoodClass.findOne({goodClass: goodClassId, isDeleted: false})
-    const shopGood = await ShopGood.findOne({good: good._id, shop: shopGoodClass.shop, isDeleted: false});
-    if(shopGood){
-        return true;
-    }
-    return false;
+    
 }
 
 
@@ -88,7 +95,6 @@ export async function createGood(params, goodClassId, isDefault){
         await goodClassGood.save();
 
         const shopGoodClass = await ShopGoodClass.findOne({goodClass: goodClassId});
-        console.log(shopGoodClass);
         if(!shopGoodClass){
             console.error('默认');
             
@@ -102,11 +108,9 @@ export async function createGood(params, goodClassId, isDefault){
 
         await shopGood.save();
 
-        return true;
-
     } catch (error) {
         console.error(error);
-        return false;
+        assert.fail('未知错误')
         
     }
     
@@ -129,19 +133,24 @@ export async function getDefaultGoods(){
 }
 
 export async function initCard(){
-    try {
+    
         const defaultShop = await getDefaultShop();
+        
         if(!defaultShop){
             console.error("默认店铺创建失败");
             console.log(defaultShop);
             assert.fail("默认店铺创建失败");
         }
+        console.log(defaultShop);
+        
+
+        const vipGoodClass = await GoodClass.findOne({name: defaultShop.name+'vip'})
+        console.log({vipGoodClass});
+        
         const defaultVipClass = await ShopGoodClass.findOne({
             shop: defaultShop._id,
-        }).populate('goodClass',['_id', 'name'],{
-            name: defaultShop.name+'vip'
-        });
-        console.log(defaultVipClass);
+            isDefault: true,
+        }).populate('goodClass', ['_id','name'])
         
 
         if(!defaultVipClass){
@@ -156,16 +165,8 @@ export async function initCard(){
         }).populate('good', ['_id', 'name'], {
             name: 'level0card'
         }).select('good');
-    } catch (error) {
-        console.error(error);
-        assert.fail(error);
-        
-    }
-    
-
-    
-
-
+        console.log({goodClassCard});
+        return true;
 }
 
 

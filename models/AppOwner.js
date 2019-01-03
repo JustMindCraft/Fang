@@ -46,6 +46,8 @@ export async function makeUserOwnApp(userId, appId){
       return true;
       
     } catch (error) {
+      console.error(error);
+      
       assert.fail(error);
       return false;
     }
