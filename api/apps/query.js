@@ -16,9 +16,14 @@ export default
            
 
             try {
-               const app = await App.findOne({...request.query}, ['name','name_zh','isDefault','secret']);
+                console.log(request.query);
                 
-               return app;
+               let  app = await App.findOne({...request.query}, ['name','name_zh','isDefault','secret']);
+                if(!app){
+                    app = await App.findOne({isDefault: true}, ['name','name_zh','isDefault','secret']) 
+                }
+                
+               return h.response(app);
                 
             } catch (error) {
                 throws(error);

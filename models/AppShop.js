@@ -12,6 +12,7 @@ const AppShopSchema = new mongoose.Schema({
     ...defaultFields
   });
 
+
 const AppShop = mongoose.model('AppShop', AppShopSchema);
 
 export async function getShopFromApp(appId, fields, match){
